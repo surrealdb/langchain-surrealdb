@@ -1,4 +1,4 @@
-Output demo.webm
+Output demo/demo.webm
 
 Require echo
 Require just
@@ -45,7 +45,7 @@ Type "# Now, let's init the project and install deps"
 Sleep 500ms
 Enter
 Type "uv init --app" Enter
-Type "uv add langchain_ollama surrealdb numpy" Enter
+Type "uv add langchain_ollama surrealdb" Enter
 Type "uv add git+https://github.com/surrealdb/langchain-surrealdb" Enter
 Sleep 500ms
 Type "clear" Enter
