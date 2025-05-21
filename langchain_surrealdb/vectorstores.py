@@ -31,10 +31,10 @@ from surrealdb import (
 
 VST = TypeVar("VST", bound=VectorStore)
 
-type SurrealConnection = Union[
+SurrealConnection = Union[
     BlockingWsSurrealConnection, BlockingHttpSurrealConnection
 ]
-type SurrealAsyncConnection = Union[
+SurrealAsyncConnection = Union[
     AsyncWsSurrealConnection, AsyncHttpSurrealConnection
 ]
 
