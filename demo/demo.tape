@@ -1,6 +1,5 @@
 Output demo/demo.webm
 
-Require echo
 Require just
 
 Set FontSize 20
@@ -17,7 +16,7 @@ Set WindowBarSize 64
 Set Framerate 20
 
 Hide
-Type "just docker-run" Enter
+Type "just demo-docker-run" Enter
 Type "tmux" Enter
 Type "ollama serve" Enter
 Ctrl+b
