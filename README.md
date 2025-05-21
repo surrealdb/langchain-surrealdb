@@ -43,6 +43,8 @@ For local, two options:
 
 ## Simple example
 
+![Demo](./tape/demo.webm)
+
 ```python
 from langchain_core.documents import Document
 from langchain_surrealdb.vectorstores import SurrealDBVectorStore
