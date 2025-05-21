@@ -43,7 +43,7 @@ For local, two options:
 
 ## Simple example
 
-![Demo](./tape/demo.webm)
+<video width="630" height="300" src="https://github.com/surrealdb/langchain-surrealdb/raw/refs/heads/docs/demo/tape/demo.webm"></video>
 
 ```python
 from langchain_core.documents import Document
