@@ -1,4 +1,5 @@
 mod examples-basic './examples/basic'
+mod examples-graph './examples/graph'
 
 default:
     @just --list

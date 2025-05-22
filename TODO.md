@@ -1,1 +1,1 @@
-- add surrealdb graph from kai-graphora (and llm-chain) local repo
+- implement and use SurrealDBGraphChain
