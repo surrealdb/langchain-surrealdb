@@ -402,8 +402,6 @@ class SurrealDBVectorStore(VectorStore):
         return ids_
 
     def delete(self, ids: Optional[List[str]] = None, **kwargs: Any) -> None:
-        if self.connection is None:
-            raise ValueError("No connection provided")
         if ids is not None:
             for _id in ids:
                 self.connection.delete(RecordID(self.table, _id))
@@ -430,8 +428,6 @@ class SurrealDBVectorStore(VectorStore):
         Returns:
             A list of Document objects.
         """
-        if self.connection is None:
-            raise ValueError("No connection provided")
         query_results = self.connection.query(
             GET_BY_ID_QUERY,
             {"table": self.table, "ids": ids},

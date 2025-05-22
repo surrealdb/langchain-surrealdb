@@ -18,8 +18,8 @@ d4 = Document(page_content="this is surreal", metadata={"source": _url})
 vector_store.add_documents(documents=[d1, d2, d3, d4], ids=["1", "2", "3", "4"])
 
 q = "surreal"
-filter = {"source": _url}
-print(f'\nSearch: "{q}" filter {filter}\n')  # noqa: T201
-results = vector_store.similarity_search_with_score(query=q, k=2, custom_filter=filter)
+_filter = {"source": _url}
+print(f'\nSearch: "{q}" filter {_filter}\n')  # noqa: T201
+results = vector_store.similarity_search_with_score(query=q, k=2, custom_filter=_filter)
 for doc, score in results:
     print(f"[similarity={score:.0%}] {doc.page_content}")  # noqa: T201
