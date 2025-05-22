@@ -9,3 +9,6 @@ docker-build:
 
 docker-run:
     docker run -ti --rm --name demo-langchain demo-langchain
+
+run:
+    poetry run python main.py
