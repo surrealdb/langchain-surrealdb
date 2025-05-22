@@ -67,6 +67,7 @@ ruff = "^0.11.10"
 
 [tool.poetry.group.typing.dependencies]
 mypy = "^1.15.0"
+ty = "^0.0.1a3"
 
 [tool.poetry.group.docs.dependencies]
 langchain-ollama = "^0.3.3"

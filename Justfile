@@ -1,11 +1,12 @@
+mod examples-basic './examples/basic'
+
 default:
     @just --list
 
-demo-tape:
-    vhs demo/demo.tape
+format:
+    #poetry run ruff format
+    make format
 
-demo-docker-build:
-    docker build -t demo-langchain -f demo/Dockerfile .
-
-demo-docker-run:
-    docker run -ti --rm --name demo-langchain demo-langchain
+lint:
+    -time poetry run ty check
+    make lint
