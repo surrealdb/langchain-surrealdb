@@ -1,9 +1,9 @@
 from langchain_core.documents import Document
-from langchain_core.prompts import ChatPromptTemplate
 from langchain_experimental.graph_transformers import LLMGraphTransformer
 from langchain_ollama import ChatOllama, OllamaEmbeddings
 from surrealdb import Surreal
 
+from langchain_surrealdb.graph_qa.chain import SurrealDBGraphQAChain
 from langchain_surrealdb.surrealdb_graph import SurrealDBGraph
 from langchain_surrealdb.vectorstores import SurrealDBVectorStore
 
@@ -25,6 +25,16 @@ with open("knowledge.txt", "r") as f:
         docs.append(Document(page_content=line.strip()))
 vector_store.add_documents(docs)
 
+# -- Vector search
+q = "starships and components"
+print(f'\nSearch: "{q}"\n')  # noqa: T201
+# results = vector_store.max_marginal_relevance_search(
+#     query=q, k=20, fetch_k=20, score_threshold=0.0
+# )
+results = vector_store.similarity_search_with_score(query=q, k=5)
+for doc, score in results:
+    print(f"[similarity={score:.0%}] {doc.page_content}")  # noqa: T201
+
 # -- Generate graph
 llm_transformer = LLMGraphTransformer(
     llm=chat_model,
@@ -41,12 +51,21 @@ llm_transformer = LLMGraphTransformer(
     # prompt=ChatPromptTemplate("Every object in a ship is a Component"),
     # strict_mode=False,
 )
-graph_documents = llm_transformer.convert_to_graph_documents(docs)
+graph_documents = llm_transformer.convert_to_graph_documents(
+    [doc for doc, _ in results]
+)
 graph_store.add_graph_documents(graph_documents, include_source=True)
 
-# -- Query
-q = "how can i fix my ship"
-print(f'\nSearch: "{q}"\n')  # noqa: T201
-results = vector_store.similarity_search_with_score(query=q, k=4)
-for doc, score in results:
-    print(f"[similarity={score:.0%}] {doc.page_content}")  # noqa: T201
+
+# -- Query Graph
+chain = SurrealDBGraphQAChain.from_llm(
+    chat_model,
+    graph=graph_store,
+    verbose=True
+)
+query = "what components are in a poco starship?"
+print(f"Query: {query}")  # noqa: T201
+response = chain.invoke({"query": query})
+print(response["result"])  # noqa: T201
+print("\nAnswer:")  # noqa: T201
+print(response["result"]["text"])  # noqa: T201

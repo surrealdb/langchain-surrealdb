@@ -597,11 +597,18 @@ class SurrealDBVectorStore(VectorStore):
         lambda_mult: float = 0.5,
         *,
         custom_filter: Optional[CustomFilter] = None,
+        score_threshold: float = -1.0,
         **kwargs: Any,
     ) -> List[Document]:
         vector = self.embedding.embed_query(query)
         docs = self.max_marginal_relevance_search_by_vector(
-            vector, k, fetch_k, lambda_mult, custom_filter=custom_filter, **kwargs
+            vector,
+            k,
+            fetch_k,
+            lambda_mult,
+            custom_filter=custom_filter,
+            score_threshold=score_threshold,
+            **kwargs,
         )
         return docs
 
@@ -664,10 +671,14 @@ class SurrealDBVectorStore(VectorStore):
         lambda_mult: float = 0.5,
         *,
         custom_filter: Optional[CustomFilter] = None,
+        score_threshold: float = -1.0,
         **kwargs: Any,
     ) -> list[Document]:
         result = self._similarity_search_by_vector_with_score(
-            embedding, fetch_k, custom_filter=custom_filter, **kwargs
+            embedding,
+            fetch_k,
+            custom_filter=custom_filter,
+            score_threshold=score_threshold,
         )
         return self._filter_documents_from_result(result, k, lambda_mult)
 

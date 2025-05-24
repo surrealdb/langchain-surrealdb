@@ -1,0 +1,116 @@
+from langchain_core.prompts import PromptTemplate
+
+SURQL_GENERATION_TEMPLATE = """Task: Generate a SurrealDB (surql) query from a User Input.
+
+You are a SurrealDB (surql) expert responsible for translating a `User Input` into a SurrealDB query.
+
+You are given a `SurrealDB Schema`. It is a JSON Object containing:
+1. `something`: TODO
+
+You may also be given a set of `surql query examples` to help you create the `SurrealDB query`. If provided, the
+`surql query examples` should be used as a reference, similar to how `SurrealDB Schema` should be used.
+
+Things you should do:
+- Think step by step
+- TODO
+
+Things you should not do:
+- Do not provide explanations or apologies in your responses.
+- Do not generate a surql query that removes or deletes any data.
+
+Under no circumstance should you generate a surql query that deletes any data whatsoever.
+
+SurrealDB Schema:
+{surrealdb_schema}
+
+SurrealDB Query Examples:
+{surql_examples}
+
+User Input:
+{user_input}
+
+SurrealDB Query:
+"""  # noqa: E501
+
+SURQL_GENERATION_PROMPT = PromptTemplate(
+    input_variables=["surrealdb_schema", "surql_examples", "user_input"],
+    template=SURQL_GENERATION_TEMPLATE,
+)
+
+SURQL_FIX_TEMPLATE = """Task: Address the SurrealDB Query Language (surql) error message of an SurrealDB Query Language
+query.
+
+You are an SurrealDB Query Language (surql) expert responsible for correcting the provided `surql Query` based on the
+provided `surql Error`. 
+
+The `surql Error` explains why the `surql Query` could not be executed in the database.
+----- TODO: update this -------
+The `surql Error` may also contain the position of the error relative to the total number of lines of the `surql Query`.
+For example, 'error X at position 2:5' denotes that the error X occurs on line 2, column 5 of the `surql Query`.  
+
+You are also given the `SurrealDB Schema`. It is a JSON Object containing:
+1. `Graph Schema`: Lists all Graphs within the SurrealDB Database Instance, along with their Edge Relationships.
+2. `Collection Schema`: Lists all Collections within the SurrealDB Database Instance, along with their document/edge
+properties and a document/edge example.
+
+You will output the `Corrected surql Query` wrapped in 3 backticks (```). Do not include any text except the Corrected
+surql Query.
+
+Remember to think step by step.
+
+
+SurrealDB Schema:
+{surrealdb_schema}
+
+surql Query:
+{surql_query}
+
+surql Error:
+{surql_error}
+
+Corrected surql Query:
+"""  # noqa: E501
+
+SURQL_FIX_PROMPT = PromptTemplate(
+    input_variables=["surql_chema", "surql_query", "surql_error"],
+    template=SURQL_FIX_TEMPLATE,
+)
+
+SURQL_QA_TEMPLATE = """Task: Generate a natural language `Summary` from the results of an SurrealDB Query Language
+query.
+
+You are an SurrealDB Query Language (surql) expert responsible for creating a well-written `Summary` from the
+`User Input` and associated `surql Result`.
+
+A user has executed an SurrealDB Query Language query, which has returned the surql Result in JSON format.
+You are responsible for creating an `Summary` based on the surql Result.
+
+You are given the following information:
+- `SurrealDB Schema`: contains a schema representation of the user's SurrealDB Database.
+- `User Input`: the original question/request of the user, which has been translated into an surql Query.
+- `surql Query`: the surql equivalent of the `User Input`, translated by another AI Model. Should you deem it to be
+incorrect, suggest a different surql Query.
+- `surql Result`: the JSON output returned by executing the `surql Query` within the SurrealDB Database.
+
+Remember to think step by step.
+
+Your `Summary` should sound like it is a response to the `User Input`.
+Your `Summary` should not include any mention of the `surql Query` or the `surql Result`.
+
+SurrealDB Schema:
+{surrealdb_schema}
+
+User Input:
+{user_input}
+
+surql Query:
+{surql_query}
+
+surql Result:
+{surql_result}
+"""  # noqa: E501
+
+SURQL_QA_PROMPT = PromptTemplate(
+    input_variables=["surql_schema", "user_input", "surql_query", "surql_result"],
+    template=SURQL_QA_TEMPLATE,
+)

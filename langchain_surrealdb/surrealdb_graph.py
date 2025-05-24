@@ -1,10 +1,8 @@
-from abc import abstractmethod
+import json
 from typing import Any, List, Optional, Tuple, Union
 
-from langchain.chains.base import Chain
 from langchain_community.graphs.graph_document import GraphDocument, Node
 from langchain_community.graphs.graph_store import GraphStore
-from langchain_core.callbacks import CallbackManagerForChainRun
 from surrealdb import (
     AsyncHttpSurrealConnection,
     AsyncWsSurrealConnection,
@@ -43,9 +41,11 @@ class SurrealDBGraph(GraphStore):
         connection: SurrealConnection,
         *,
         table_prefix: str = "graph_",
+        relation_prefix: str = "relation_",
     ) -> None:
         self.connection = connection
         self.table_prefix = table_prefix
+        self.relation_prefix = relation_prefix
 
     def _query(self, surql: str, vars: dict) -> dict:
         return self.connection.query_raw(surql, vars)
@@ -56,7 +56,16 @@ class SurrealDBGraph(GraphStore):
     @property
     def get_schema(self) -> str:
         """Return the schema of the Graph database"""
-        raise NotImplementedError
+        info = self._query("INFO FOR DB", {})
+        tables = info["result"][0]["result"]["tables"].keys()
+        nodes = []
+        edges = []
+        for table in tables:
+            if table.startswith(self.table_prefix):
+                nodes.append(table)
+            elif table.startswith(self.relation_prefix):
+                edges.append(table)
+        return json.dumps({"nodes": nodes, "edges": edges})
 
     @property
     def get_structured_schema(self) -> dict[str, Any]:
@@ -65,7 +74,8 @@ class SurrealDBGraph(GraphStore):
 
     def query(self, query: str, params: dict = {}) -> list[dict[str, Any]]:
         """Query the graph."""
-        raise NotImplementedError
+        res = self._query(query, params)
+        return res["result"][0]["result"]
 
     def refresh_schema(self) -> None:
         """Refresh the graph schema information."""
@@ -131,35 +141,8 @@ class SurrealDBGraph(GraphStore):
                     RELATE_QUERY,
                     {
                         "in": self._build_node_recordid(rel.source),
-                        "relation": rel.type,
+                        "relation": self.relation_prefix + rel.type,
                         "out": self._build_node_recordid(rel.target),
                         "content": rel.properties,
                     },
                 )
-
-
-# TODO: implement
-class SurrealDBGraphChain(Chain):
-    def __init__(self, **kwargs: Any) -> None:
-        """Initialize the chain."""
-        super().__init__(**kwargs)
-
-    @property
-    @abstractmethod
-    def input_keys(self) -> list[str]:
-        """Keys expected to be in the chain input."""
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def output_keys(self) -> list[str]:
-        """Keys expected to be in the chain output."""
-        raise NotImplementedError
-
-    @abstractmethod
-    def _call(
-        self,
-        inputs: dict[str, Any],
-        run_manager: Optional[CallbackManagerForChainRun] = None,
-    ) -> dict[str, Any]:
-        raise NotImplementedError

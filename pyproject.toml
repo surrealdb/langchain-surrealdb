@@ -23,6 +23,7 @@ python = ">=3.10,<4.0"
 langchain-core = "^0.3.15"
 surrealdb = "^1.0.4"
 numpy = "^2.2.6"
+langchain-experimental = "^0.3.4"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "T201"]
