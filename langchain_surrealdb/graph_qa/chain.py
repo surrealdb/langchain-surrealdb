@@ -18,7 +18,17 @@ from langchain_surrealdb.surrealdb_graph import SurrealDBGraph
 INTERMEDIATE_STEPS_KEY = "intermediate_steps"
 
 SURQL_EXAMPLES = """
-SELECT *,->?->? FROM graph_source
+SELECT <-relation_Attends<-graph_Practice as practice FROM graph_Symptom WHERE name = "Headache";
+
+SELECT <-relation_Attends<-graph_Practice as practice FROM graph_Symptom WHERE name IN ["Headache", "Sore Throat"];
+
+SELECT <-relation_Treats<-graph_Treatment as treatment FROM graph_Symptom WHERE name IN ["Headache", "Sore Throat"];
+
+SELECT name,
+    <-relation_Attends<-graph_Practice as practice,
+    <-relation_Treats<-graph_Treatment as treatment
+FROM graph_Symptom
+WHERE name IN ["Headache", "Sore Throat"];
 """
 
 
@@ -91,7 +101,7 @@ class SurrealDBGraphQAChain(Chain):
         graph_schema = self.graph.get_schema
         args = {
             "user_input": question,
-            "surrealdb_schema": graph_schema,
+            "surql_schema": graph_schema,
             "surql_examples": SURQL_EXAMPLES,
         }
         args.update(inputs)
@@ -101,10 +111,6 @@ class SurrealDBGraphQAChain(Chain):
         result = self.surql_generation_chain.invoke(args, callbacks=callbacks)
         generated_surql = extract_surql(result["text"])
 
-        # Correct Cypher query if enabled
-        # if self.cypher_query_corrector:
-        #     generated_cypher = self.cypher_query_corrector(generated_cypher)
-
         _run_manager.on_text("Generated surql:", end="\n", verbose=self.verbose)
         _run_manager.on_text(
             generated_surql, color="green", end="\n", verbose=self.verbose
@@ -112,10 +118,46 @@ class SurrealDBGraphQAChain(Chain):
 
         intermediate_steps.append({"query": generated_surql})
 
+        def _retryable_query(
+            surql: str,
+            retry_count: int = 0,
+            max_retries: int = 2,
+        ) -> list[dict[str, Any]]:
+            if retry_count > max_retries:
+                raise Exception(f"Failed to fix query in under {max_retries} retries.")
+            try:
+                return self.graph.query(surql)
+            except Exception as _e:
+                _run_manager.on_text("Query error:", end="\n", verbose=self.verbose)
+                _run_manager.on_text(str(_e), end="\n", verbose=self.verbose)
+                _args = {
+                    "surql_schema": self.graph.get_schema,
+                    "surql_query": surql,
+                    "surql_error": str(_e),
+                }
+                _result = self.surql_fix_chain.invoke(_args, callbacks=callbacks)
+                _generated_surql = extract_surql(_result["text"])
+                if _generated_surql == surql:
+                    raise Exception(f"Failed to fix query. Surql: {_generated_surql}")
+                _run_manager.on_text('"Fixed" surql:', end="\n", verbose=self.verbose)
+                _run_manager.on_text(
+                    _generated_surql, color="green", end="\n", verbose=self.verbose
+                )
+                return _retryable_query(
+                    _generated_surql,
+                    retry_count=retry_count + 1,
+                    max_retries=max_retries,
+                )
+
         # Retrieve and limit the number of results
         # Generated Cypher be null if query corrector identifies invalid schema
         if generated_surql:
-            context = self.graph.query(generated_surql)[: self.top_k]
+            try:
+                res = _retryable_query(generated_surql)
+                context = res[: self.top_k]
+            except Exception as e:
+                print(f"Failed to get context from graph: {e}")
+                context = []
         else:
             context = []
 
@@ -130,7 +172,7 @@ class SurrealDBGraphQAChain(Chain):
             final_result = self.qa_chain.invoke(
                 {
                     "user_input": question,
-                    "surrealdb_schema": graph_schema,
+                    "surql_schema": graph_schema,
                     "surql_result": context,
                     "surql_query": generated_surql,
                 },

@@ -12,6 +12,7 @@ dependencies = [
     "langchain-ollama (>=0.3.3,<0.4.0)",
     "langchain-surrealdb",
     "surrealdb (>=1.0.4,<2.0.0)",
+    "pyyaml (>=6.0.2,<7.0.0)",
 ]
 
 [tool.poetry.dependencies]

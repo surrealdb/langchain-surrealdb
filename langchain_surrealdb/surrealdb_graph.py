@@ -75,7 +75,10 @@ class SurrealDBGraph(GraphStore):
     def query(self, query: str, params: dict = {}) -> list[dict[str, Any]]:
         """Query the graph."""
         res = self._query(query, params)
-        return res["result"][0]["result"]
+        if "error" in res:
+            raise Exception(res["error"]["message"])
+        else:
+            return res["result"][0]["result"]
 
     def refresh_schema(self) -> None:
         """Refresh the graph schema information."""

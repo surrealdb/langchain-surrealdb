@@ -1,0 +1,236 @@
+- category: General Symptoms
+  symptoms:
+    - name: Fever
+      description: Elevated body temperature, usually above 100.4°F (38°C).
+      medical_practice: General Practice, Internal Medicine, Pediatrics
+      possible_treatments:
+        - Antipyretics (e.g., ibuprofen, acetaminophen)
+        - Rest
+        - Hydration
+        - Treating the underlying cause
+    - name: Fatigue/Tiredness
+      description: Feeling unusually drained, lacking energy, or experiencing persistent exhaustion.
+      medical_practice: General Practice, Internal Medicine, Sleep Medicine
+      possible_treatments:
+        - Rest and adequate sleep
+        - Lifestyle modifications (diet, exercise)
+        - Addressing underlying medical conditions (e.g., anemia, thyroid disorders)
+        - Stress management
+    - name: Pain (General)
+      description: A general term for an uncomfortable sensation indicating potential tissue damage, varying in type (e.g., sharp, dull, throbbing) and location.
+      medical_practice: General Practice, Pain Management, Orthopedics, Neurology
+      possible_treatments:
+        - Over-the-counter pain relievers (e.g., NSAIDs, acetaminophen)
+        - Prescription pain medications
+        - Physical therapy
+        - Heat/cold therapy
+        - Rest
+        - Addressing the underlying cause
+    - name: Dizziness/Vertigo
+      description: Feeling lightheaded, unsteady, or experiencing a sensation that the room is spinning.
+      medical_practice: General Practice, Neurology, ENT (Otolaryngology)
+      possible_treatments:
+        - Addressing underlying cause (e.g., inner ear issues, low blood pressure)
+        - Vestibular rehabilitation
+        - Medications to reduce nausea or dizziness
+        - Hydration
+    - name: Nausea/Vomiting
+      description: Feeling sick to your stomach, often with an urge to vomit, or actually throwing up.
+      medical_practice: General Practice, Gastroenterology
+      possible_treatments:
+        - Anti-emetics (medications to reduce nausea/vomiting)
+        - Hydration (oral rehydration solutions)
+        - Bland diet
+        - Avoiding trigger foods
+        - Addressing the underlying cause
+    - name: Chills
+      description: Feeling cold and shivering, often accompanying a fever, due to rapid muscle contraction and relaxation.
+      medical_practice: General Practice, Internal Medicine
+      possible_treatments:
+        - Warm blankets
+        - Antipyretics (if accompanied by fever)
+        - Treating the underlying infection or cause
+    - name: Malaise
+      description: A general feeling of discomfort, illness, uneasiness, or lack of well-being.
+      medical_practice: General Practice, Internal Medicine
+      possible_treatments:
+        - Rest
+        - Hydration
+        - Treating the underlying cause (e.g., infection, chronic illness)
+    - name: Swelling/Edema
+      description: Enlargement of body parts due to fluid retention in tissues.
+      medical_practice: General Practice, Internal Medicine, Cardiology, Nephrology
+      possible_treatments:
+        - Diuretics (medications to reduce fluid retention)
+        - Elevation of the affected limb
+        - Compression stockings
+        - Addressing underlying cause (e.g., heart failure, kidney disease)
+
+- category: Respiratory Symptoms
+  symptoms:
+    - name: Cough
+      description: A reflex action to clear the airways of irritants, mucus, or foreign objects. Can be dry or productive (with phlegm).
+      medical_practice: General Practice, Pulmonology, ENT (Otolaryngology)
+      possible_treatments:
+        - Cough suppressants (for dry cough)
+        - Expectorants (for productive cough)
+        - Humidifiers
+        - Throat lozenges
+        - Treating the underlying cause (e.g., infection, allergies)
+    - name: Nasal Congestion/Runny Nose
+      description: Stuffy nose due to inflamed nasal passages or a dripping nose with mucus discharge.
+      medical_practice: General Practice, ENT (Otolaryngology), Allergy & Immunology
+      possible_treatments:
+        - Decongestants (oral or nasal sprays)
+        - Antihistamines (for allergies)
+        - Saline nasal rinses
+        - Humidifiers
+        - Treating underlying cause (e.g., cold, allergies)
+    - name: Sore Throat
+      description: Pain, irritation, or scratchiness in the throat, often made worse by swallowing.
+      medical_practice: General Practice, ENT (Otolaryngology)
+      possible_treatments:
+        - Throat lozenges/sprays
+        - Warm salt water gargles
+        - Pain relievers (e.g., acetaminophen, ibuprofen)
+        - Hydration
+        - Treating the underlying cause (e.g., viral infection, strep throat)
+    - name: Shortness of Breath/Dyspnea
+      description: Difficulty breathing or feeling like you can't get enough air.
+      medical_practice: General Practice, Pulmonology, Cardiology, Emergency Medicine
+      possible_treatments:
+        - Oxygen therapy
+        - Bronchodilators (for asthma/COPD)
+        - Diuretics (for fluid overload)
+        - Addressing underlying cardiac or respiratory conditions
+        - Relaxation techniques
+    - name: Sneezing
+      description: A sudden, forceful expulsion of air from the nose and mouth, typically triggered by an irritant in the nasal passages.
+      medical_practice: General Practice, Allergy & Immunology
+      possible_treatments:
+        - Antihistamines (for allergies)
+        - Avoiding allergens/irritants
+        - Nasal sprays
+
+- category: Gastrointestinal Symptoms
+  symptoms:
+    - name: Diarrhea
+      description: Loose, watery stools, often with increased frequency of bowel movements.
+      medical_practice: General Practice, Gastroenterology
+      possible_treatments:
+        - Oral rehydration solutions
+        - Anti-diarrheal medications (e.g., loperamide)
+        - Bland diet
+        - Avoiding trigger foods
+        - Treating the underlying cause (e.g., infection, food intolerance)
+    - name: Constipation
+      description: Infrequent or difficult bowel movements, often with hard, dry stools.
+      medical_practice: General Practice, Gastroenterology
+      possible_treatments:
+        - Increased fiber intake (dietary or supplements)
+        - Increased fluid intake
+        - Laxatives (bulk-forming, stool softeners, osmotic, stimulant)
+        - Regular exercise
+        - Addressing underlying causes
+    - name: Abdominal Pain/Stomach Ache
+      description: Pain or discomfort in the belly, ranging from mild to severe, and varying in location and character.
+      medical_practice: General Practice, Gastroenterology, Emergency Medicine
+      possible_treatments:
+        - Over-the-counter pain relievers
+        - Antacids
+        - Heat therapy
+        - Rest
+        - Addressing the underlying cause (e.g., indigestion, IBS, appendicitis)
+    - name: Heartburn/Indigestion
+      description: A burning sensation in the chest, often behind the breastbone, or discomfort after eating, often due to stomach acid reflux.
+      medical_practice: General Practice, Gastroenterology
+      possible_treatments:
+        - Antacids
+        - H2 blockers
+        - Proton pump inhibitors (PPIs)
+        - Dietary modifications (avoiding trigger foods)
+        - Elevating the head of the bed
+    - name: Bloating/Gas
+      description: Feeling full, distended, or uncomfortable in the abdomen due to trapped gas in the digestive system.
+      medical_practice: General Practice, Gastroenterology
+      possible_treatments:
+        - Over-the-counter gas relievers (e.g., simethicone)
+        - Dietary modifications (avoiding gas-producing foods)
+        - Probiotics
+        - Regular exercise
+        - Addressing underlying digestive issues
+
+- category: Skin Symptoms
+  symptoms:
+    - name: Rash
+      description: A change in the skin's appearance, often with redness, bumps, blisters, or itching, indicating irritation or inflammation.
+      medical_practice: General Practice, Dermatology, Allergy & Immunology
+      possible_treatments:
+        - Topical corticosteroids
+        - Antihistamines (for itching)
+        - Moisturizers
+        - Avoiding irritants
+        - Treating the underlying cause (e.g., allergic reaction, infection)
+    - name: Itching/Pruritus
+      description: An uncomfortable sensation that makes you want to scratch, often without visible skin changes.
+      medical_practice: General Practice, Dermatology, Allergy & Immunology
+      possible_treatments:
+        - Topical creams (e.g., hydrocortisone, calamine lotion)
+        - Antihistamines
+        - Lukewarm baths
+        - Moisturizers
+        - Addressing the underlying cause (e.g., dry skin, eczema, liver disease)
+    - name: Hives/Urticaria
+      description: Itchy, red, raised welts on the skin that can appear suddenly and vary in size and shape.
+      medical_practice: General Practice, Dermatology, Allergy & Immunology
+      possible_treatments:
+        - Antihistamines
+        - Oral corticosteroids (for severe cases)
+        - Avoiding triggers
+        - Epinephrine (for severe allergic reactions/anaphylaxis)
+
+- category: Other Common Symptoms
+  symptoms:
+    - name: Headache
+      description: Pain in the head, which can vary in intensity, location, and character (e.g., tension headache, migraine).
+      medical_practice: General Practice, Neurology
+      possible_treatments:
+        - Over-the-counter pain relievers (e.g., acetaminophen, ibuprofen, naproxen)
+        - Prescription medications (for migraines)
+        - Rest
+        - Stress management
+        - Hydration
+        - Identifying and avoiding triggers
+    - name: Insomnia
+      description: Difficulty falling asleep, staying asleep, or experiencing non-restorative sleep, leading to daytime impairment.
+      medical_practice: General Practice, Sleep Medicine, Psychiatry
+      possible_treatments:
+        - Sleep hygiene practices (consistent sleep schedule, dark/quiet room)
+        - Cognitive Behavioral Therapy for Insomnia (CBT-I)
+        - Prescription sleep medications (short-term use)
+        - Addressing underlying medical or psychological conditions
+    - name: Urinary Problems
+      description: A broad category including symptoms like frequent urination, painful urination (dysuria), urgency, or incontinence.
+      medical_practice: General Practice, Urology, Gynecology (for women)
+      possible_treatments:
+        - Antibiotics (for UTIs)
+        - Bladder training
+        - Pelvic floor exercises
+        - Medications to relax bladder or reduce frequency
+        - Addressing underlying conditions (e.g., enlarged prostate, overactive bladder)
+    - name: Muscle Weakness
+      description: A decrease in the strength of your muscles, making it difficult to perform normal movements or hold objects.
+      medical_practice: General Practice, Neurology, Physical Medicine & Rehabilitation
+      possible_treatments:
+        - Physical therapy
+        - Occupational therapy
+        - Addressing underlying neurological or muscular conditions
+        - Nutritional support
+    - name: Tingling/Numbness (Paresthesia)
+      description: A "pins and needles" sensation or a partial or complete loss of feeling in a body part.
+      medical_practice: General Practice, Neurology
+      possible_treatments:
+        - Addressing underlying cause (e.g., nerve compression, nutritional deficiencies, diabetes)
+        - Physical therapy
+        - Medications to manage nerve pain
+        - Vitamin supplements (e.g., B12 for deficiency)
