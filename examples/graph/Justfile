@@ -1,5 +1,8 @@
 default:
     @just --list
 
-run:
-    poetry run python main.py
+ingest:
+    poetry run python main.py ingest
+
+chat:
+    poetry run python main.py chat
