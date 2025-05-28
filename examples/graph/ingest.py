@@ -4,10 +4,9 @@ import yaml
 from langchain_community.graphs.graph_document import GraphDocument, Node, Relationship
 from langchain_core.documents import Document
 
+from examples.graph.definitions import Symptom, Symptoms
 from langchain_surrealdb.surrealdb_graph import SurrealDBGraph
 from langchain_surrealdb.vectorstores import SurrealDBVectorStore
-
-from .definitions import Symptom, Symptoms
 
 
 def ingest(vector_store: SurrealDBVectorStore, graph_store: SurrealDBGraph) -> None:

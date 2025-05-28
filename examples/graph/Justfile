@@ -4,5 +4,5 @@ default:
 ingest:
     poetry run python main.py ingest
 
-chat:
-    poetry run python main.py chat
+chat *ARGS:
+    poetry run python main.py chat {{ARGS}}
