@@ -25,14 +25,14 @@ def ingest() -> None:
 def chat(verbose) -> None:
     vector_store, graph_store, conn = init_stores(ns=ns, db=db)
     chat_model = ChatOllama(model="llama3.2", temperature=0)
+    try:
+        while True:
+            query = click.prompt(
+                click.style("\n\nWhat are your symptoms?", fg="green"), type=str
+            )
+            if query == "exit":
+                break
 
-    while True:
-        query = click.prompt(
-            click.style("\n\nWhat are your symptoms?", fg="green"), type=str
-        )
-        if query == "/exit":
-            break
-        try:
             # -- Find relevant docs
             docs = vector_search(query, vector_store, k=3)
             symptoms = get_document_names(docs)
@@ -43,8 +43,10 @@ def chat(verbose) -> None:
             )
             ask(f"what medical practices can help with {symptoms}", chain)
             ask(f"what treatments can help with {symptoms}", chain)
-        except Exception as e:
-            print(e)  # noqa: T201
+    except KeyboardInterrupt:
+        ...
+    except Exception as e:
+        print(e)  # noqa: T201
 
     conn.close()
     print("\nBye!\n")  # noqa: T201
