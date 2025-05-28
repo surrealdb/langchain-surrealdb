@@ -25,10 +25,14 @@ def ingest() -> None:
 def chat(verbose) -> None:
     vector_store, graph_store, conn = init_stores(ns=ns, db=db)
     chat_model = ChatOllama(model="llama3.2", temperature=0)
+
+    def query_logger(q: str, results: int) -> None:
+        conn.insert("generated_query", {"query": q, "results": results})
+
     try:
         while True:
             query = click.prompt(
-                click.style("\n\nWhat are your symptoms?", fg="green"), type=str
+                click.style("\nWhat are your symptoms?", fg="green"), type=str
             )
             if query == "exit":
                 break
@@ -39,7 +43,10 @@ def chat(verbose) -> None:
 
             # -- Query graph
             chain = SurrealDBGraphQAChain.from_llm(
-                chat_model, graph=graph_store, verbose=verbose
+                chat_model,
+                graph=graph_store,
+                verbose=verbose,
+                query_logger=query_logger,
             )
             ask(f"what medical practices can help with {symptoms}", chain)
             ask(f"what treatments can help with {symptoms}", chain)
@@ -49,7 +56,7 @@ def chat(verbose) -> None:
         print(e)  # noqa: T201
 
     conn.close()
-    print("\nBye!\n")  # noqa: T201
+    print("Bye!")  # noqa: T201
 
 
 if __name__ == "__main__":

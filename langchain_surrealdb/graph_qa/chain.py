@@ -1,5 +1,5 @@
 import re
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from langchain.chains.base import Chain
 from langchain.chains.llm import LLMChain
@@ -18,6 +18,8 @@ from langchain_surrealdb.surrealdb_graph import SurrealDBGraph
 INTERMEDIATE_STEPS_KEY = "intermediate_steps"
 
 SURQL_EXAMPLES = """
+SELECT <-?<-? FROM node_a WHERE name IN ["foo", "bar", "zar"]
+
 SELECT <-relation_Attends<-graph_Practice as practice FROM graph_Symptom WHERE name = "Headache";
 
 SELECT <-relation_Attends<-graph_Practice as practice FROM graph_Symptom WHERE name IN ["Headache", "Sore Throat"];
@@ -48,6 +50,7 @@ class SurrealDBGraphQAChain(Chain):
     top_k: int = 10
     return_intermediate_steps: bool = False
     skip_qa_prompt: bool = False
+    query_logger: Callable[[str, int], None] | None = None
     _input_key: str = "query"
     _output_key: str = "result"
 
@@ -155,10 +158,12 @@ class SurrealDBGraphQAChain(Chain):
             try:
                 res = _retryable_query(generated_surql)
                 context = res[: self.top_k]
+                if self.query_logger:
+                    self.query_logger(generated_surql, len(res))
             except Exception as e:
                 _run_manager.on_text(
                     f"Failed to get context from graph: {e}",
-                    color="orange",
+                    color="red",
                     end="\n",
                     verbose=self.verbose,
                 )
