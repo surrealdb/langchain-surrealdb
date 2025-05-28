@@ -29,7 +29,7 @@ SELECT name,
     <-relation_Treats<-graph_Treatment as treatment
 FROM graph_Symptom
 WHERE name IN ["Headache", "Sore Throat"];
-"""
+"""  # noqa: E501
 
 
 def extract_surql(text: str) -> str:
@@ -40,7 +40,6 @@ def extract_surql(text: str) -> str:
     return matches[0] if matches else text
 
 
-# TODO: implement
 class SurrealDBGraphQAChain(Chain):
     graph: SurrealDBGraph = Field(exclude=True)
     qa_chain: LLMChain
@@ -105,6 +104,7 @@ class SurrealDBGraphQAChain(Chain):
             "surql_examples": SURQL_EXAMPLES,
         }
         args.update(inputs)
+        _run_manager.on_text(f"Query: {question}", end="\n", verbose=self.verbose)
 
         intermediate_steps: List = []
 
@@ -156,7 +156,12 @@ class SurrealDBGraphQAChain(Chain):
                 res = _retryable_query(generated_surql)
                 context = res[: self.top_k]
             except Exception as e:
-                print(f"Failed to get context from graph: {e}")
+                _run_manager.on_text(
+                    f"Failed to get context from graph: {e}",
+                    color="orange",
+                    end="\n",
+                    verbose=self.verbose,
+                )
                 context = []
         else:
             context = []
@@ -169,18 +174,27 @@ class SurrealDBGraphQAChain(Chain):
             _run_manager.on_text(
                 str(context), color="green", end="\n", verbose=self.verbose
             )
-            final_result = self.qa_chain.invoke(
-                {
-                    "user_input": question,
-                    "surql_schema": graph_schema,
-                    "surql_result": context,
-                    "surql_query": generated_surql,
-                },
-                callbacks=callbacks,
-            )
+            final_result = [
+                self.qa_chain.invoke(
+                    {
+                        "user_input": question,
+                        "surql_schema": graph_schema,
+                        "surql_result": context,
+                        "surql_query": generated_surql,
+                    },
+                    callbacks=callbacks,
+                )
+            ]
 
         chain_result: Dict[str, Any] = {self._output_key: final_result}
         if self.return_intermediate_steps:
             chain_result[INTERMEDIATE_STEPS_KEY] = intermediate_steps
 
+        _run_manager.on_text("Answer:", end="\n", verbose=self.verbose)
+        _run_manager.on_text(
+            chain_result[self._output_key][0]["text"],
+            color="green",
+            end="\n",
+            verbose=self.verbose,
+        )
         return chain_result

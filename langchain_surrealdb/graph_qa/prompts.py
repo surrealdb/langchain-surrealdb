@@ -38,13 +38,15 @@ SURQL_GENERATION_PROMPT = PromptTemplate(
     template=SURQL_GENERATION_TEMPLATE,
 )
 
-# Error examples:
-# "There was a problem with the database: Parse error: Unexpected token `a strand`, expected `?`, `(` or an identifier
-#  --> [1:15]
-#   |
-# 1 | SELECT *,->?->'graph_Symptom' FROM graph_source WHERE ?->'graph_Condition' = ...
-#   |               ^
-# "
+"""
+Error examples:
+"There was a problem with the database: Parse error: Unexpected token `a strand`, expected `?`, `(` or an identifier
+ --> [1:15]
+  |
+1 | SELECT *,->?->'graph_Symptom' FROM graph_source WHERE ?->'graph_Condition' = ...
+  |               ^
+"
+"""  # noqa: E501
 
 SURQL_FIX_TEMPLATE = """Task: Address the SurrealDB Query Language (surql) error message of an SurrealDB Query Language
 query.

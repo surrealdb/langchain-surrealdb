@@ -11,3 +11,6 @@ format:
 lint:
     -time poetry run ty check
     make lint
+
+install:
+    poetry update --with lint,typing,test
