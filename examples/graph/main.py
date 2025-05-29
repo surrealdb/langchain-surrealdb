@@ -3,7 +3,7 @@ from langchain_ollama import ChatOllama
 
 from examples.graph.ingest import ingest as ingest_handler
 from examples.graph.utils import ask, get_document_names, init_stores, vector_search
-from langchain_surrealdb.graph_qa.chain import SurrealDBGraphQAChain
+from langchain_surrealdb.experimental.graph_qa.chain import SurrealDBGraphQAChain
 
 ns = "langchain"
 db = "example-graph"

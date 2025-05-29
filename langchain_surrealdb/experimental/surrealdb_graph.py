@@ -29,11 +29,6 @@ RELATE_QUERY = """
     CONTENT $content
 """
 
-# TODO: create indexes
-
-# Best practices:
-# https://surrealdb.com/docs/surrealdb/reference-guide/graph-relations#tips-and-best-practices-with-graph-relations
-
 
 class SurrealDBGraph(GraphStore):
     def __init__(

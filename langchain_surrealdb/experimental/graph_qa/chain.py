@@ -8,12 +8,12 @@ from langchain_core.language_models import BaseLanguageModel
 from langchain_core.prompts import BasePromptTemplate
 from pydantic import Field
 
-from langchain_surrealdb.graph_qa.prompts import (
+from langchain_surrealdb.experimental.graph_qa.prompts import (
     SURQL_FIX_PROMPT,
     SURQL_GENERATION_PROMPT,
     SURQL_QA_PROMPT,
 )
-from langchain_surrealdb.surrealdb_graph import SurrealDBGraph
+from langchain_surrealdb.experimental.surrealdb_graph import SurrealDBGraph
 
 INTERMEDIATE_STEPS_KEY = "intermediate_steps"
 

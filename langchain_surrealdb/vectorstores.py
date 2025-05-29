@@ -133,72 +133,61 @@ class SurrealDBVectorStore(VectorStore):
     Search:
         .. code-block:: python
 
-            results = vector_store.similarity_search(query="thud",k=1)
-            for doc in results:
-                print(f"* {doc.page_content} [{doc.metadata}]")
+            results = vector_store.similarity_search(
+                query="surreal", k=1, custom_filter={"source": "https://surrealdb.com"}
+            )
 
         .. code-block:: python
 
-            # TODO: Example output
+            [Document(id='4', metadata={'source': 'https://surrealdb.com'}, page_content='this is surreal')]
 
-    Search with filter:
-        .. code-block:: python
-
-            results = vector_store.similarity_search(query="thud",k=1,filter={"bar": "baz"})
-            for doc in results:
-                print(f"* {doc.page_content} [{doc.metadata}]")
-
-        .. code-block:: python
-
-            # TODO: Example output
-
-    # TODO: Fill out with relevant variables and example output.
     Search with score:
         .. code-block:: python
 
-            results = vector_store.similarity_search_with_score(query="qux",k=1)
+            results = vector_store.similarity_search_with_score(
+                query="thud", k=1, custom_filter={"source": "https://surrealdb.com"}
+            )
             for doc, score in results:
-                print(f"* [SIM={score:3f}] {doc.page_content} [{doc.metadata}]")
+                print(f"[similarity={score:.0%}] {doc.page_content}")  # noqa: T201
 
         .. code-block:: python
 
-            # TODO: Example output
+            [similarity=57%] this is surreal
 
-    # TODO: Fill out with relevant variables and example output.
     Async:
         .. code-block:: python
 
             # add documents
-            # await vector_store.aadd_documents(documents=documents, ids=ids)
+            await vector_store.aadd_documents(documents=documents, ids=ids)
 
             # delete documents
-            # await vector_store.adelete(ids=["3"])
+            await vector_store.adelete(ids=["3"])
 
             # search
-            # results = vector_store.asimilarity_search(query="thud",k=1)
+            results = vector_store.asimilarity_search(query="thud",k=1)
 
             # search with score
-            results = await vector_store.asimilarity_search_with_score(query="qux",k=1)
-            for doc,score in results:
-                print(f"* [SIM={score:3f}] {doc.page_content} [{doc.metadata}]")
+            results = await vector_store.asimilarity_search_with_score(
+                query="thud", k=1, custom_filter={"source": "https://surrealdb.com"}
+            )
+            for doc, score in results:
+                print(f"[similarity={score:.0%}] {doc.page_content}")  # noqa: T201
 
         .. code-block:: python
 
-            # TODO: Example output
+            [similarity=57%] this is surreal
 
-    # TODO: Fill out with relevant variables and example output.
     Use as Retriever:
         .. code-block:: python
 
             retriever = vector_store.as_retriever(
-                search_type="mmr",
-                search_kwargs={"k": 1, "fetch_k": 2, "lambda_mult": 0.5},
+                search_type="mmr", search_kwargs={"k": 1, "lambda_mult": 0.5}
             )
-            retriever.invoke("thud")
+            retriever.invoke("surreal")
 
         .. code-block:: python
 
-            # TODO: Example output
+            [Document(id='4', metadata={'source': 'https://surrealdb.com'}, page_content='this is surreal')]
 
     """  # noqa: E501
 

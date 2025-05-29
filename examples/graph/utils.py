@@ -7,8 +7,8 @@ from surrealdb import (
     Surreal,
 )
 
-from langchain_surrealdb.graph_qa.chain import SurrealDBGraphQAChain
-from langchain_surrealdb.surrealdb_graph import SurrealDBGraph
+from langchain_surrealdb.experimental.graph_qa.chain import SurrealDBGraphQAChain
+from langchain_surrealdb.experimental.surrealdb_graph import SurrealDBGraph
 from langchain_surrealdb.vectorstores import SurrealDBVectorStore
 
 
