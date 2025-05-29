@@ -65,7 +65,7 @@ For local, two options:
 
 ## Simple example
 
-<video width="630" height="300" src="https://github.com/user-attachments/assets/2965cd8b-9fd2-4517-900b-8e1b165421a1"></video>
+<video width="630" height="300" src="https://github.com/user-attachments/assets/9e1c0dda-4334-48ea-8317-d2dc72b275c0"></video>
 
 ```python
 from langchain_core.documents import Document
