@@ -7,10 +7,6 @@
 <br>
 
 <p align="center">
-	<a href="https://surrealdb.com/docs/integrations/frameworks/langchain"><img src="https://img.shields.io/badge/docs-view-44cc11.svg?style=flat-square"></a>
-</p>
-
-<p align="center">
 	<a href="https://surrealdb.com/discord"><img src="https://img.shields.io/discord/902568124350599239?label=discord&style=flat-square&color=5a66f6"></a>
 	&nbsp;
     <a href="https://twitter.com/surrealdb"><img src="https://img.shields.io/badge/twitter-follow_us-1d9bf0.svg?style=flat-square"></a>
@@ -92,5 +88,7 @@ for doc, score in results:
 
 ## Next steps
 
+- look at the [basic example](./examples/basic). Use the Dockerfile to try it out!
+- look at the [graph example](./examples/graph)
 - try the [jupyther notebook](./docs/vectorstores.ipynb)
 - [Awesome SurrealDB](https://github.com/surrealdb/awesome-surreal), A curated list of SurrealDB resources, tools, utilities, and applications
