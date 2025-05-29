@@ -42,6 +42,36 @@ GET_BY_ID_QUERY = """
         .map(|$v| type::thing($v[0], $v[1])) \
 """
 
+DEFINE_INDEX = """
+    DEFINE INDEX IF NOT EXISTS {index_name}
+        ON TABLE {table}
+        FIELDS vector
+        MTREE DIMENSION {embedding_dimension} DIST COSINE TYPE F32
+        CONCURRENTLY;
+"""
+
+SEARCH_QUERY = """
+    SELECT
+        id,
+        text,
+        metadata,
+        vector,
+        similarity
+    FROM (
+        SELECT
+            id,
+            text,
+            metadata,
+            vector,
+            vector::similarity::cosine(vector, $vector) as similarity
+        FROM type::table($table)
+        WHERE vector <|{k}|> $vector
+            {custom_filter_str}
+    )
+    WHERE similarity >= $score_threshold
+    ORDER BY similarity DESC
+"""
+
 
 @dataclass
 class SurrealDocument:
@@ -217,13 +247,11 @@ class SurrealDBVectorStore(VectorStore):
         self._ensure_index()
 
     def _ensure_index(self) -> None:
-        query = f"""
-            DEFINE INDEX IF NOT EXISTS {self.index_name}
-                ON TABLE {self.table}
-                FIELDS vector
-                MTREE DIMENSION {self.embedding_dimension} DIST COSINE TYPE F32
-                CONCURRENTLY;
-        """
+        query = DEFINE_INDEX.format(
+            index_name=self.index_name,
+            table=self.table,
+            embedding_dimension=self.embedding_dimension,
+        )
         self.connection.query(query)
 
     @staticmethod
@@ -456,27 +484,7 @@ class SurrealDBVectorStore(VectorStore):
                     filter_value = f"{custom_filter[key]}"
                 custom_filter_str += f"and metadata.{key} = {filter_value} "
 
-        query = f"""
-            SELECT
-                id,
-                text,
-                metadata,
-                vector,
-                similarity
-            FROM (
-                SELECT
-                    id,
-                    text,
-                    metadata,
-                    vector,
-                    vector::similarity::cosine(vector, $vector) as similarity
-                FROM type::table($table)
-                WHERE vector <|{k}|> $vector
-                    {custom_filter_str}
-            )
-            WHERE similarity >= $score_threshold
-            ORDER BY similarity DESC
-        """
+        query = SEARCH_QUERY.format(k=k, custom_filter_str=custom_filter_str)
         return query, args
 
     def _similarity_search_with_score_by_vector(

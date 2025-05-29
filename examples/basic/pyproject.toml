@@ -7,7 +7,12 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.10,<4.0"
-dependencies = []
+dependencies = [
+    "langchain-core (>=0.3.61,<0.4.0)",
+    "langchain-ollama (>=0.3.3,<0.4.0)",
+    "surrealdb (>=1.0.4,<2.0.0)",
+    "langchain-surrealdb",
+]
 
 [tool.poetry.dependencies]
 langchain-surrealdb = { path = "../..", develop = true }
