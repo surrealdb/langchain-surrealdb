@@ -10,6 +10,10 @@ This is an example of vector and graph search featuring:
 
 ## Running
 
+**Requirements:**
+- SurrealDB
+- Ollama
+
 You can run SurrealDB locally or start with a [free SurrealDB cloud account](https://surrealdb.com/docs/cloud/getting-started).
 
 For local, two options:
