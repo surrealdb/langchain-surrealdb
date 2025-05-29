@@ -1,0 +1,29 @@
+[project]
+name = "example_graph"
+version = "0.1.0"
+description = ""
+authors = [
+    { name = "Martin Schaer", email = "martin.schaer@surrealdb.com" }
+]
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "langchain-core (>=0.3.61,<0.4.0)",
+    "langchain-ollama (>=0.3.3,<0.4.0)",
+    "langchain-surrealdb",
+    "surrealdb (>=1.0.4,<2.0.0)",
+    "pyyaml (>=6.0.2,<7.0.0)",
+    "langchain (>=0.3.25,<0.4.0)",
+    "langchain-community (>=0.3.24,<0.4.0)",
+    "click (>=8.2.1,<9.0.0)",
+]
+
+[project.scripts]
+run = "example_graph.main:cli"
+
+[tool.poetry.dependencies]
+langchain-surrealdb = { path = "../..", develop = true }
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

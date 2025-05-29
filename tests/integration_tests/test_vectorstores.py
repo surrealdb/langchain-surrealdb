@@ -1,10 +1,9 @@
 from typing import Generator
-import asyncio
 
 import pytest
 from langchain_core.vectorstores import VectorStore
 from langchain_tests.integration_tests import VectorStoreIntegrationTests
-from surrealdb import Surreal, AsyncSurreal
+from surrealdb import AsyncSurreal, Surreal
 
 from langchain_surrealdb.vectorstores import SurrealDBVectorStore
 

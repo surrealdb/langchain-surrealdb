@@ -1,0 +1,14 @@
+default:
+    @just --list
+
+tape:
+    vhs demo.tape
+
+docker-build:
+    docker build -t demo-langchain -f Dockerfile .
+
+docker-run:
+    docker run -ti --rm --name demo-langchain demo-langchain
+
+run:
+    poetry run python main.py

@@ -1,4 +1,4 @@
-Output demo/demo.webm
+Output demo.webm
 
 Require just
 
@@ -16,7 +16,7 @@ Set WindowBarSize 64
 Set Framerate 20
 
 Hide
-Type "just demo-docker-run" Enter
+Type "just docker-run" Enter
 Type "tmux" Enter
 Type "ollama serve" Enter
 Ctrl+b
@@ -56,27 +56,31 @@ Sleep 500ms
 Enter
 Type "dGi"
 Sleep 100ms
-Type@10ms "from langchain_core.documents import Document" Enter
-Type@10ms "from langchain_surrealdb.vectorstores import SurrealDBVectorStore" Enter
-Type@10ms "from langchain_ollama import OllamaEmbeddings" Enter
-Type@10ms "from surrealdb import Surreal" Enter
+Type@10ms 'from langchain_core.documents import Document' Enter
+Type@10ms 'from langchain_ollama import OllamaEmbeddings' Enter
+Type@10ms 'from surrealdb import Surreal' Enter
+Enter
+Type@10ms 'from langchain_surrealdb.vectorstores import SurrealDBVectorStore' Enter
 Enter
 Type@10ms 'conn = Surreal("ws://localhost:8000/rpc")' Enter
 Type@10ms 'conn.signin({"username": "root", "password": "root"})' Enter
-Type@10ms 'conn.use("langchain", "demo")' Enter
+Type@10ms 'conn.use("langchain", "example-basic")' Enter
 Type@10ms 'vector_store = SurrealDBVectorStore(OllamaEmbeddings(model="llama3.2"), conn)' Enter
 Enter
-Type@10ms 'print("Adding docs...")' Enter
-Type@10ms 'doc_1 = Document(page_content="foo")' Enter
-Type@10ms 'doc_2 = Document(page_content="SurrealDB")' Enter
-Type@10ms 'vector_store.add_documents(documents=[doc_1, doc_2], ids=["1", "2"])' Enter
+Type@10ms '_url = "https://surrealdb.com"' Enter
+Type@10ms 'd1 = Document(page_content="foo", metadata={"source": _url})' Enter
+Type@10ms 'd2 = Document(page_content="SurrealDB", metadata={"source": _url})' Enter
+Type@10ms 'd3 = Document(page_content="bar", metadata={"source": "https://example.com"})' Enter
+Type@10ms 'd4 = Document(page_content="this is surreal", metadata={"source": _url})' Enter
 Enter
-Type@10ms 'print("Searching \"surreal\"...")' Enter
-Type@10ms 'results = vector_store.similarity_search_with_score(' Enter
-Type@10ms 'query="surreal", k=1' Enter
-Type@10ms ")" Enter
-Type@10ms "for doc, score in results:" Enter
-Type@10ms 'print(f"[similarity={score:3f}] {doc.page_content}")' Enter
+Type@10ms 'vector_store.add_documents(documents=[d1, d2, d3, d4], ids=["1", "2", "3", "4"])' Enter
+Enter
+Type@10ms 'q = "surreal"' Enter
+Type@10ms 'filter = {"source": _url}' Enter
+Type@10ms `print(f'\nSearch: "{q}" filter {filter}\n')  # noqa: T201` Enter
+Type@10ms 'results = vector_store.similarity_search_with_score(query=q, k=2, custom_filter=filter)' Enter
+Type@10ms 'for doc, score in results:' Enter
+Type@10ms 'print(f"[similarity={score:.0%}] {doc.page_content}")  # noqa: T201' Enter
 Enter
 Escape
 Sleep 2s
