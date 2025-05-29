@@ -890,7 +890,7 @@ name = "langchain-surrealdb"
 version = "0.1.0"
 description = "An integration package connecting SurrealDB and LangChain"
 optional = false
-python-versions = ">=3.10,<4.0"
+python-versions = ">=3.9,<4.0"
 groups = ["main"]
 files = []
 develop = true
@@ -898,7 +898,10 @@ develop = true
 [package.dependencies]
 langchain-core = "^0.3.15"
 langchain-experimental = "^0.3.4"
-numpy = "^2.2.6"
+numpy = [
+    {version = ">=1.26.0", markers = "python_version < \"3.13\""},
+    {version = ">=2.1.0", markers = "python_version >= \"3.13\""},
+]
 surrealdb = "^1.0.4"
 
 [package.source]

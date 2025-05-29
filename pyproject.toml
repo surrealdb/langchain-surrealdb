@@ -19,11 +19,14 @@ disallow_untyped_defs = "True"
 "Release Notes" = "https://github.com/langchain-ai/langchain/releases?q=tag%3A%22surrealdb%3D%3D0%22&expanded=true"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<4.0"
+python = ">=3.9,<4.0"
 langchain-core = "^0.3.15"
 surrealdb = "^1.0.4"
-numpy = "^2.2.6"
 langchain-experimental = "^0.3.4"
+numpy = [
+    { version = ">=1.26.0", markers = "python_version < \"3.13\"" },
+    { version = ">=2.1.0", markers = "python_version >= \"3.13\"" },
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "T201"]
@@ -56,7 +59,6 @@ notebook = "^7.4.3"
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.3"
 pytest-asyncio = "^0.23.2"
-pytest-socket = "^0.7.0"
 pytest-watcher = "^0.3.4"
 langchain-tests = "^0.3.5"
 
