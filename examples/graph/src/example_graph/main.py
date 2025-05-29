@@ -1,16 +1,17 @@
 import click
 from langchain_ollama import ChatOllama
 
-from examples.graph.ingest import ingest as ingest_handler
-from examples.graph.utils import ask, get_document_names, init_stores, vector_search
 from langchain_surrealdb.experimental.graph_qa.chain import SurrealDBGraphQAChain
+
+from .ingest import ingest as ingest_handler
+from .utils import ask, get_document_names, init_stores, vector_search
 
 ns = "langchain"
 db = "example-graph"
 
 
 @click.group()
-def cli(): ...
+def cli() -> None: ...
 
 
 @cli.command()
@@ -22,7 +23,7 @@ def ingest() -> None:
 
 @cli.command()
 @click.option("--verbose", is_flag=True)
-def chat(verbose) -> None:
+def chat(verbose: bool) -> None:
     vector_store, graph_store, conn = init_stores(ns=ns, db=db)
     chat_model = ChatOllama(model="llama3.2", temperature=0)
 

@@ -13,12 +13,12 @@ from langchain_surrealdb.vectorstores import SurrealDBVectorStore
 
 
 def init_stores(
-    url="ws://localhost:8000/rpc",
-    user="root",
-    password="root",
+    url: str = "ws://localhost:8000/rpc",
+    user: str = "root",
+    password: str = "root",
     *,
-    ns="test",
-    db="test",
+    ns: str = "test",
+    db: str = "test",
     clear: bool = False,
 ) -> tuple[
     SurrealDBVectorStore,
@@ -37,7 +37,7 @@ def init_stores(
 
 
 def vector_search(
-    query: str, vector_store: SurrealDBVectorStore, *, k=3
+    query: str, vector_store: SurrealDBVectorStore, *, k: int = 3
 ) -> list[Document]:
     print(f'\nSearch: "{query}"')  # noqa: T201
 

@@ -1,5 +1,5 @@
 [project]
-name = "example-graph"
+name = "example_graph"
 version = "0.1.0"
 description = ""
 authors = [
@@ -17,6 +17,9 @@ dependencies = [
     "langchain-community (>=0.3.24,<0.4.0)",
     "click (>=8.2.1,<9.0.0)",
 ]
+
+[project.scripts]
+run = "example_graph.main:cli"
 
 [tool.poetry.dependencies]
 langchain-surrealdb = { path = "../..", develop = true }

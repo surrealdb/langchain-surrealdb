@@ -4,16 +4,17 @@ import yaml
 from langchain_community.graphs.graph_document import GraphDocument, Node, Relationship
 from langchain_core.documents import Document
 
-from examples.graph.definitions import Symptom, Symptoms
 from langchain_surrealdb.experimental.surrealdb_graph import SurrealDBGraph
 from langchain_surrealdb.vectorstores import SurrealDBVectorStore
+
+from .definitions import Symptom, Symptoms
 
 
 def ingest(vector_store: SurrealDBVectorStore, graph_store: SurrealDBGraph) -> None:
     # -- Insert documents
     symptom_descriptions: list[Document] = []
     parsed_symptoms: list[Symptom] = []
-    with open("symptoms.yaml", "r") as f:
+    with open("./symptoms.yaml", "r") as f:
         symptoms = yaml.safe_load(f)
         assert isinstance(symptoms, list), "failed to load symptoms"
         for category in symptoms:
