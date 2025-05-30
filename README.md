@@ -1,5 +1,5 @@
 <p align="center">
-	<img width=120 src="https://raw.githubusercontent.com/surrealdb/icons/main/surreal.svg" />
+    <img width=120 src="https://raw.githubusercontent.com/surrealdb/icons/main/surreal.svg" />
 </p>
 
 <h3 align="center">The official SurrealDB components for LangChain</h3>
@@ -7,8 +7,20 @@
 <br>
 
 <p align="center">
-	<a href="https://surrealdb.com/discord"><img src="https://img.shields.io/discord/902568124350599239?label=discord&style=flat-square&color=5a66f6"></a>
-	&nbsp;
+    <a href="https://github.com/surrealdb/langchain-surreal"><img src="https://img.shields.io/badge/status-stable-ff00bb.svg?style=flat-square"></a>
+    &nbsp;
+    <a href="https://surrealdb.com/docs/integrations/frameworks/langchain"><img src="https://img.shields.io/badge/docs-view-44cc11.svg?style=flat-square"></a>
+    &nbsp;
+    <a href="https://pypi.org/project/langchain-surreal/"><img src="https://img.shields.io/pypi/v/langchain-surreal?style=flat-square"></a>
+    &nbsp;
+    <a href="https://pypi.org/project/langchain-surreal/"><img src="https://img.shields.io/pypi/dm/langchain-surreal?style=flat-square"></a>
+    &nbsp;
+    <a href="https://pypi.org/project/langchain-surreal/"><img src="https://img.shields.io/pypi/pyversions/langchain-surreal?style=flat-square"></a>
+</p>
+
+<p align="center">
+    <a href="https://surrealdb.com/discord"><img src="https://img.shields.io/discord/902568124350599239?label=discord&style=flat-square&color=5a66f6"></a>
+    &nbsp;
     <a href="https://twitter.com/surrealdb"><img src="https://img.shields.io/badge/twitter-follow_us-1d9bf0.svg?style=flat-square"></a>
     &nbsp;
     <a href="https://www.linkedin.com/company/surrealdb/"><img src="https://img.shields.io/badge/linkedin-connect_with_us-0a66c2.svg?style=flat-square"></a>
@@ -20,16 +32,24 @@
 
 This package contains the LangChain integration with SurrealDB
 
->[SurrealDB](https://surrealdb.com/) is an end-to-end cloud-native database designed for modern applications, including web, mobile, serverless, Jamstack, backend, and traditional applications. With SurrealDB, you can simplify your database and API infrastructure, reduce development time, and build secure, performant apps quickly and cost-effectively.
+> [SurrealDB](https://surrealdb.com/) is an end-to-end cloud-native database designed for modern applications, including
+> web, mobile, serverless, Jamstack, backend, and traditional applications. With SurrealDB, you can simplify your database
+> and API infrastructure, reduce development time, and build secure, performant apps quickly and cost-effectively.
 >
->**Key features of SurrealDB include:**
+> **Key features of SurrealDB include:**
 >
->* **Reduces development time:** SurrealDB simplifies your database and API stack by removing the need for most server-side components, allowing you to build secure, performant apps faster and cheaper.
->* **Real-time collaborative API backend service:** SurrealDB functions as both a database and an API backend service, enabling real-time collaboration.
->* **Support for multiple querying languages:** SurrealDB supports SQL querying from client devices, GraphQL, ACID transactions, WebSocket connections, structured and unstructured data, graph querying, full-text indexing, and geospatial querying.
->* **Granular access control:** SurrealDB provides row-level permissions-based access control, giving you the ability to manage data access with precision.
+> - **Reduces development time:** SurrealDB simplifies your database and API stack by removing the need for most
+>   server-side components, allowing you to build secure, performant apps faster and cheaper.
+> - **Real-time collaborative API backend service:** SurrealDB functions as both a database and an API backend service,
+>   enabling real-time collaboration.
+> - **Support for multiple querying languages:** SurrealDB supports SQL querying from client devices, GraphQL, ACID
+>   transactions, WebSocket connections, structured and unstructured data, graph querying, full-text indexing, and
+>   geospatial querying.
+> - **Granular access control:** SurrealDB provides row-level permissions-based access control, giving you the ability to
+>   manage data access with precision.
 >
->View the [features](https://surrealdb.com/features), the latest [releases](https://surrealdb.com/releases), and [documentation](https://surrealdb.com/docs).
+> View the [features](https://surrealdb.com/features), the latest [releases](https://surrealdb.com/releases),
+> and [documentation](https://surrealdb.com/docs).
 
 ## Installation
 
@@ -44,20 +64,23 @@ uv add --upgrade langchain-surrealdb surrealdb
 
 ## Requirements
 
-You can run SurrealDB locally or start with a [free SurrealDB cloud account](https://surrealdb.com/docs/cloud/getting-started).
+You can run SurrealDB locally or start with
+a [free SurrealDB cloud account](https://surrealdb.com/docs/cloud/getting-started).
 
 For local, two options:
-1. [Install SurrealDB](https://surrealdb.com/docs/surrealdb/installation) and [run SurrealDB](https://surrealdb.com/docs/surrealdb/installation/running). Run in-memory with:
 
-    ```bash
-    surreal start -u root -p root
-    ```
+1. [Install SurrealDB](https://surrealdb.com/docs/surrealdb/installation)
+  and [run SurrealDB](https://surrealdb.com/docs/surrealdb/installation/running). Run in-memory with:
+
+  ```bash
+  surreal start -u root -p root
+  ```
 
 2. [Run with Docker](https://surrealdb.com/docs/surrealdb/installation/running/docker).
 
-    ```bash
-    docker run --rm --pull always -p 8000:8000 surrealdb/surrealdb:latest start
-    ```
+  ```bash
+  docker run --rm --pull always -p 8000:8000 surrealdb/surrealdb:latest start
+  ```
 
 ## Simple example
 
