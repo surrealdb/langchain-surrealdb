@@ -7,15 +7,15 @@
 <br>
 
 <p align="center">
-    <a href="https://github.com/surrealdb/langchain-surreal"><img src="https://img.shields.io/badge/status-stable-ff00bb.svg?style=flat-square"></a>
+    <a href="https://github.com/surrealdb/langchain-surrealdb"><img src="https://img.shields.io/badge/status-stable-ff00bb.svg?style=flat-square"></a>
     &nbsp;
     <a href="https://surrealdb.com/docs/integrations/frameworks/langchain"><img src="https://img.shields.io/badge/docs-view-44cc11.svg?style=flat-square"></a>
     &nbsp;
-    <a href="https://pypi.org/project/langchain-surreal/"><img src="https://img.shields.io/pypi/v/langchain-surreal?style=flat-square"></a>
+    <a href="https://pypi.org/project/langchain-surrealdb/"><img src="https://img.shields.io/pypi/v/langchain-surrealdb?style=flat-square"></a>
     &nbsp;
-    <a href="https://pypi.org/project/langchain-surreal/"><img src="https://img.shields.io/pypi/dm/langchain-surreal?style=flat-square"></a>
+    <a href="https://pypi.org/project/langchain-surrealdb/"><img src="https://img.shields.io/pypi/dm/langchain-surrealdb?style=flat-square"></a>
     &nbsp;
-    <a href="https://pypi.org/project/langchain-surreal/"><img src="https://img.shields.io/pypi/pyversions/langchain-surreal?style=flat-square"></a>
+    <a href="https://pypi.org/project/langchain-surrealdb/"><img src="https://img.shields.io/pypi/pyversions/langchain-surrealdb?style=flat-square"></a>
 </p>
 
 <p align="center">
