@@ -53,3 +53,4 @@ poetry run run chat
 
 ## TODO
 - demo the LLMGraphTransformer
+- implement "few shot prompting": https://python.langchain.com/docs/tutorials/graph/#few-shot-prompting
