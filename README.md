@@ -32,24 +32,14 @@
 
 This package contains the LangChain integration with SurrealDB
 
-> [SurrealDB](https://surrealdb.com/) is an end-to-end cloud-native database designed for modern applications, including
-> web, mobile, serverless, Jamstack, backend, and traditional applications. With SurrealDB, you can simplify your database
-> and API infrastructure, reduce development time, and build secure, performant apps quickly and cost-effectively.
+> [SurrealDB](https://surrealdb.com/) is a unified, multi-model database purpose-built for AI systems. It combines structured and unstructured data (including vector search, graph traversal, relational queries, full-text search, document storage, and time-series data) into a single ACID-compliant engine, scaling from a 3 MB edge binary to petabyte-scale clusters in the cloud. By eliminating the need for multiple specialized stores, SurrealDB simplifies architectures, reduces latency, and ensures consistency for AI workloads.
 >
-> **Key features of SurrealDB include:**
->
-> - **Reduces development time:** SurrealDB simplifies your database and API stack by removing the need for most
->   server-side components, allowing you to build secure, performant apps faster and cheaper.
-> - **Real-time collaborative API backend service:** SurrealDB functions as both a database and an API backend service,
->   enabling real-time collaboration.
-> - **Support for multiple querying languages:** SurrealDB supports SQL querying from client devices, GraphQL, ACID
->   transactions, WebSocket connections, structured and unstructured data, graph querying, full-text indexing, and
->   geospatial querying.
-> - **Granular access control:** SurrealDB provides row-level permissions-based access control, giving you the ability to
->   manage data access with precision.
->
-> View the [features](https://surrealdb.com/features), the latest [releases](https://surrealdb.com/releases),
-> and [documentation](https://surrealdb.com/docs).
+> **Why SurrealDB Matters for GenAI Systems**
+> - **One engine for storage and memory:** Combine durable storage and fast, agent-friendly memory in a single system, providing all the data your agent needs and removing the need to sync multiple systems.
+> - **One-hop memory for agents:** Run vector search, graph traversal, semantic joins, and transactional writes in a single query, giving LLM agents fast, consistent memory access without stitching relational, graph and vector databases together.
+> - **In-place inference and real-time updates:** SurrealDB enables agents to run inference next to data and receive millisecond-fresh updates, critical for real-time reasoning and collaboration.
+> - **Versioned, durable context:** SurrealDB supports time-travel queries and versioned records, letting agents audit or “replay” past states for consistent, explainable reasoning.
+> - **Plug-and-play agent memory:** Expose AI memory as a native concept, making it easy to use SurrealDB as a drop-in backend for AI frameworks.
 
 ## Installation
 
