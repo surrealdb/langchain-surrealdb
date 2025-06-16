@@ -16,4 +16,4 @@ lint:
 install:
     poetry update --with lint,typing,test
     cd examples/basic && poetry update
-    cd examples/graph && poetry update
+    cd examples/graph && poetry update && poetry install
