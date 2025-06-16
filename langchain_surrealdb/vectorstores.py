@@ -28,8 +28,6 @@ from surrealdb import (
     RecordID,
 )
 
-# VST = TypeVar("VST", bound=SurrealDBVectorStore)
-
 SurrealConnection = Union[BlockingWsSurrealConnection, BlockingHttpSurrealConnection]
 SurrealAsyncConnection = Union[AsyncWsSurrealConnection, AsyncHttpSurrealConnection]
 CustomFilter = dict[str, Union[str, bool, float, int]]
@@ -478,11 +476,8 @@ class SurrealDBVectorStore(VectorStore):
         custom_filter_str = ""
         if custom_filter:
             for key in custom_filter:
-                if isinstance(custom_filter[key], str):
-                    filter_value = f"'{custom_filter[key]}'"
-                else:
-                    filter_value = f"{custom_filter[key]}"
-                custom_filter_str += f"and metadata.{key} = {filter_value} "
+                args[key] = custom_filter[key]
+                custom_filter_str += f"and metadata.{key} = ${key} "
 
         query = SEARCH_QUERY.format(k=k, custom_filter_str=custom_filter_str)
         return query, args
