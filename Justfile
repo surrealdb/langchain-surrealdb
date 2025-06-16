@@ -12,6 +12,7 @@ lint:
     -time poetry run ty check
     make lint
 
+# Install dependencies
 install:
     poetry update --with lint,typing,test
     cd examples/basic && poetry update
