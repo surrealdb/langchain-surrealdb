@@ -101,7 +101,7 @@ for doc, score in results:
 
 ## Next steps
 
-- look at the [basic example](./examples/basic). Use the Dockerfile to try it out!
-- look at the [graph example](./examples/graph)
-- try the [jupyther notebook](./docs/vectorstores.ipynb)
+- look at the [basic example](https://github.com/surrealdb/langchain-surrealdb/tree/main/examples/basic). Use the Dockerfile to try it out!
+- look at the [graph example](https://github.com/surrealdb/langchain-surrealdb/tree/main/examples/graph)
+- try the [jupyter notebook](https://github.com/surrealdb/langchain-surrealdb/tree/main/docs/vectorstores.ipynb)
 - [Awesome SurrealDB](https://github.com/surrealdb/awesome-surreal), A curated list of SurrealDB resources, tools, utilities, and applications
