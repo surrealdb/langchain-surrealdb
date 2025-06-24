@@ -1,6 +1,6 @@
 ---
-title: Building a simple GenAI chatbot using GraphRAG
-sub_title: SurrealDB + LangChain
+title: Make a GenAI chatbot using GraphRAG
+sub_title: with SurrealDB + LangChain
 author: Martin Schaer <martin.schaer@surrealdb.com>
 theme:
   name: surreal
@@ -22,7 +22,7 @@ Flow overview
 ===
 
 1. ingest data (categorized health symptoms and common treatments)
-2. ask the user for their symptom
+2. ask the user about their symptoms
 3. find relevant documents in the DB
 4. find related common treatments
 
@@ -85,7 +85,9 @@ Note that the `SurrealDBVectorStore` is instantiated with `OllamaEmbeddings`. Th
 
 <!-- end_slide -->
 
-## Now we are ready to populate the vector store
+## Populating the vector store
+
+With the vector store instantiated, we are now ready to populate it.
 
 ```python
 # Parsing the YAML into a Symptoms dataclass
@@ -103,7 +105,7 @@ with open("./symptoms.yaml", "r") as f:
                 )
             )
 
-# This calculates the embeddings and inserts the documents in the DB
+# This calculates the embeddings and inserts the documents into the DB
 vector_store.add_documents(symptom_descriptions)
 ```
 
@@ -147,9 +149,9 @@ LangChain provides different [chat models](https://python.langchain.com/docs/int
 chat_model = ChatOllama(model="llama3.2", temperature=0)
 ```
 
-To generate the graph query based on the user's prompt, we need to instantiate a QA (Questioning and Answering:) Chain component. In this case we are using `SurrealDBGraphQAChain`.
+To generate the graph query based on the user's prompt, we need to instantiate a QA (Questioning and Answering) Chain component. In this case we are using `SurrealDBGraphQAChain`.
 
-But before quering the graph, we need to find in our vector store the symptoms by doing a similarity search based on the user's prompt.
+But before querying the graph, we need to find the symptoms in our vector store by doing a similarity search based on the user's prompt.
 
 ```python
 query = click.prompt(
@@ -176,10 +178,10 @@ ask(f"what treatments can help with {symptoms}", chain)
 Running
 ===
 
-First we start the DB:
+First we start the DB with a single root user:
 
 ```bash
-surreal start -u root -p root
+surreal start --user root --pass secret
 ```
 
 Second, we ingest the data:
@@ -238,7 +240,7 @@ And for the second:
 SELECT <-relation_Treats<-graph_Treatment as treatment FROM graph_Symptom WHERE name IN ["Nasal Congestion/Runny Nose", "Dizziness/Vertigo", "Sore Throat"]
 ```
 
-The results of these two queries are Python lists of dictionaries containing the treatment and medical practices names, which are fed to the LLM to generate a nice human readable answer:
+The results of these two queries are Python lists of dictionaries containing the treatment and medical practice names, which are fed to the LLM to generate a nice human readable answer:
 
     Here is a summary of the medical practices that can help with Nasal Congestion/Runny Nose, Dizziness/Vertigo, and Sore Throat:
 
