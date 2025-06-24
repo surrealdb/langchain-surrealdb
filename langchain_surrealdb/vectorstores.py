@@ -295,7 +295,7 @@ class SurrealDBVectorStore(VectorStore):
         embedding: Embeddings,
         metadatas: Optional[List[dict]] = None,
         *,
-        connection: SurrealConnection = None,
+        connection: SurrealConnection,
         table: str = "documents",
         index_name: str = "documents_vector_index",
         embedding_dimension: int | None = None,
@@ -318,7 +318,7 @@ class SurrealDBVectorStore(VectorStore):
         embedding: Embeddings,
         metadatas: Optional[List[dict]] = None,
         *,
-        connection: SurrealConnection = None,
+        connection: SurrealConnection,
         async_connection: SurrealAsyncConnection | None = None,
         table: str = "documents",
         index_name: str = "documents_vector_index",
@@ -447,6 +447,8 @@ class SurrealDBVectorStore(VectorStore):
             GET_BY_ID_QUERY,
             {"table": self.table, "ids": ids},
         )
+        if not isinstance(query_results, list):
+            raise ValueError("Invalid query results, expected a list")
         return self._parse_documents(ids, query_results)
 
     async def aget_by_ids(self, ids: Sequence[str], /) -> list[Document]:
@@ -456,6 +458,8 @@ class SurrealDBVectorStore(VectorStore):
             GET_BY_ID_QUERY,
             {"table": self.table, "ids": ids},
         )
+        if not isinstance(query_results, list):
+            raise ValueError("Invalid query results, expected a list")
         return self._parse_documents(ids, query_results)
 
     def _build_search_query(
@@ -493,6 +497,8 @@ class SurrealDBVectorStore(VectorStore):
             vector, k, score_threshold, custom_filter
         )
         results = self.connection.query(query, args)
+        if not isinstance(results, list):
+            raise ValueError("Invalid query results, expected a list")
         return self._parse_results(results)
 
     async def _asimilarity_search_with_score_by_vector(
@@ -508,6 +514,8 @@ class SurrealDBVectorStore(VectorStore):
             vector, k, score_threshold, custom_filter
         )
         results = await self.async_connection.query(query, args)
+        if not isinstance(results, list):
+            raise ValueError("Invalid query results, expected a list")
         return self._parse_results(results)
 
     def similarity_search(
@@ -633,6 +641,8 @@ class SurrealDBVectorStore(VectorStore):
             vector, k, score_threshold, custom_filter
         )
         results = self.connection.query(query, args)
+        if not isinstance(results, list):
+            raise ValueError("Invalid query results, expected a list")
         return self._parse_results(results)
 
     @staticmethod
