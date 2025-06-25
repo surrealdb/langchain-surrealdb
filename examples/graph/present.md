@@ -1,6 +1,6 @@
 ---
 title: Make a GenAI chatbot using GraphRAG
-sub_title: with SurrealDB + LangChain
+sub_title: with SurrealDB and LangChain
 author: Martin Schaer <martin.schaer@surrealdb.com>
 theme:
   name: surreal
@@ -178,37 +178,15 @@ ask(f"what treatments can help with {symptoms}", chain)
 Running
 ===
 
-First we start the DB with a single root user:
-
-```bash
-surreal start --user root --pass secret
-```
-
-Second, we ingest the data:
-
-```bash
-just examples-graph ingest
-# or
-poetry run run ingest
-```
-
-Third, we start the CLI chat:
-
-```bash
-just examples-graph chat
-# verbose logs enables
-just examples-graph chat --verbose
-# or directly with poetry
-poetry run run chat
-# and
-poetry run run chat --verbose
-```
+Clone the [repository](https://github.com/surrealdb/langchain-surrealdb) and follow the instructions in the README of the [graph example](https://github.com/surrealdb/langchain-surrealdb/tree/main/examples/graph).
 
 Running the program will look like this:
 
 ```
 What are your symptoms?: i have a runny nose and itchy eyes
 ```
+
+<!-- end_slide -->
 
 The script tries marginal relevance and similarity searches in the vector store to compare the results, which helps to choose the right one for your specific use case.
 
@@ -226,46 +204,50 @@ similarity_search_with_score
 
 Then, the QA chain will generate and run a graph query behind the scenes, and generate the responses.
 
+<!-- end_slide -->
+
 This script is asking our AI two questions based on the user's symptoms:
 - Question: what medical practices can help with Nasal Congestion/Runny Nose, Dizziness/Vertigo, Sore Throat
 - Question: what treatments can help with Nasal Congestion/Runny Nose, Dizziness/Vertigo, Sore Throat
 
 For the first question the QA chain component generated this graph query:
-```
+
+```sql
 SELECT <-relation_Attends<-graph_Practice as practice FROM graph_Symptom WHERE name IN ["Nasal Congestion/Runny Nose", "Dizziness/Vertigo", "Sore Throat"];
 ```
 
-And for the second:
-```
+The result of this query -a Python list of dictionaries containing the medical practice names- are fed to the LLM to generate a nice human readable answer:
+
+> Here is a summary of the medical practices that can help with Nasal Congestion/Runny Nose, Dizziness/Vertigo, and Sore Throat:
+>
+> Several medical practices may be beneficial for individuals experiencing symptoms such as Nasal Congestion/Runny Nose, Dizziness/Vertigo, and Sore Throat. These include Neurology, ENT (Otolaryngology), General Practice, and Allergy & Immunology.
+>
+> Neurology specialists can provide guidance on managing conditions that affect the nervous system, which may be related to dizziness or vertigo. ENT (Otolaryngology) specialists focus on ear, nose, and throat issues, making them a good fit for addressing nasal congestion and runny nose symptoms. General Practice physicians offer comprehensive care for various health concerns, including those affecting the respiratory system.
+>
+> Allergy & Immunology specialists can help diagnose and treat allergies that may contribute to Nasal Congestion/Runny Nose, as well as provide immunological support for overall health.
+
+<!-- end_slide -->
+
+The query for the second question (What treatments can help with Nasal Congestion/Runny Nose, Dizziness/Vertigo, Sore Throat), looks like this:
+
+```sql
 SELECT <-relation_Treats<-graph_Treatment as treatment FROM graph_Symptom WHERE name IN ["Nasal Congestion/Runny Nose", "Dizziness/Vertigo", "Sore Throat"]
 ```
 
-The results of these two queries are Python lists of dictionaries containing the treatment and medical practice names, which are fed to the LLM to generate a nice human readable answer:
-
-    Here is a summary of the medical practices that can help with Nasal Congestion/Runny Nose, Dizziness/Vertigo, and Sore Throat:
-
-    Several medical practices may be beneficial for individuals experiencing symptoms such as Nasal Congestion/Runny Nose, Dizziness/Vertigo, and Sore Throat. These include Neurology, ENT (Otolaryngology), General Practice, and Allergy & Immunology.
-
-    Neurology specialists can provide guidance on managing conditions that affect the nervous system, which may be related to dizziness or vertigo. ENT (Otolaryngology) specialists focus on ear, nose, and throat issues, making them a good fit for addressing nasal congestion and runny nose symptoms. General Practice physicians offer comprehensive care for various health concerns, including those affecting the respiratory system.
-
-    Allergy & Immunology specialists can help diagnose and treat allergies that may contribute to Nasal Congestion/Runny Nose, as well as provide immunological support for overall health.
-
 And regarding the possible treatments:
 
-    Here is a summary of the treatments that can help with Nasal Congestion/Runny Nose, Dizziness/Vertigo, and Sore Throat:
-
-    The following treatments have been found to be effective in alleviating symptoms:
-
-    - Vestibular rehabilitation
-    - Hydration
-    - Medications to reduce nausea or dizziness
-    - Antihistamines (for allergies)
-    - Decongestants (oral or nasal sprays)
-    - Saline nasal rinses
-    - Humidifiers
-    - Throat lozenges/sprays
-    - Treating underlying cause (e.g., cold, allergies)
-    - Pain relievers (e.g., acetaminophen, ibuprofen)
-    - Warm salt water gargles
-
-<!-- end_slide -->
+> Here is a summary of the treatments that can help with Nasal Congestion/Runny Nose, Dizziness/Vertigo, and Sore Throat:
+>
+> The following treatments have been found to be effective in alleviating symptoms:
+>
+> - Vestibular rehabilitation
+> - Hydration
+> - Medications to reduce nausea or dizziness
+> - Antihistamines (for allergies)
+> - Decongestants (oral or nasal sprays)
+> - Saline nasal rinses
+> - Humidifiers
+> - Throat lozenges/sprays
+> - Treating underlying cause (e.g., cold, allergies)
+> - Pain relievers (e.g., acetaminophen, ibuprofen)
+> - Warm salt water gargles
