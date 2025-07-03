@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "langchain-surrealdb"
-version = "0.1.2"
+version = "0.1.3"
 description = "An integration package connecting SurrealDB and LangChain"
 authors = []
 readme = "README.md"

@@ -4,6 +4,9 @@ default:
 tape:
     vhs demo.tape
 
+tape-graph:
+    vhs demo-graph.tape
+
 docker-build:
     docker build -t demo-langchain -f Dockerfile .
 
@@ -12,3 +15,6 @@ docker-run:
 
 run:
     poetry run python main.py
+
+run-graph:
+    poetry run python graph.py
