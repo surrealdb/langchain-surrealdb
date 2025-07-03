@@ -82,7 +82,7 @@ class SurrealDBGraph(GraphStore):
     def delete_nodes(
         self, ids: Optional[List[Tuple[str, Optional[str]]]] = None, **kwargs: Any
     ) -> None:
-        """Delete nodes in the graph."""
+        """Delete nodes (and relations) in the graph."""
         if ids is not None:
             for table, _id in ids:
                 if _id is None:
@@ -91,9 +91,10 @@ class SurrealDBGraph(GraphStore):
                     self.connection.delete(RecordID(table, _id))
         else:
             # find all tables
-            info = self._query("INFO FOR DB", {})
-            for table in info.get("tables", {}).keys():
-                self.connection.delete(table)
+            info = self.connection.query("INFO FOR DB", {})
+            if isinstance(info, dict):
+                for table in info.get("tables", {}).keys():
+                    self.connection.delete(table)
             self.connection.delete(self.table_prefix + "source")
 
     def add_graph_documents(
