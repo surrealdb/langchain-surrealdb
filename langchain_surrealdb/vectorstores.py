@@ -61,7 +61,7 @@ SEARCH_QUERY = """
             text,
             metadata,
             vector,
-            vector::similarity::cosine(vector, $vector) as similarity
+            (1 - vector::distance::knn()) as similarity
         FROM type::table($table)
         WHERE vector <|{k}|> $vector
             {custom_filter_str}

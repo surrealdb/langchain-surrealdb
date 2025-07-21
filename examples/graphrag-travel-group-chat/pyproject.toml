@@ -1,0 +1,27 @@
+[project]
+name = "graphrag-travel-group-chat"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "click>=8.2.1",
+    "langchain-community>=0.3.27",
+    "langchain-ollama>=0.3.5",
+    "langchain-surrealdb",
+    "nanoid>=2.0.0",
+]
+
+[project.scripts]
+cli = "graphrag_travel_group_chat.main:cli"
+
+[tool.uv.sources]
+langchain-surrealdb = { path = "../../", editable = true }
+langchain-community = { path = "../../../langchain-community/libs/community", editable = true }
+
+[dependency-groups]
+dev = ["ruff>=0.12.4", "ty>=0.0.1a15"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
