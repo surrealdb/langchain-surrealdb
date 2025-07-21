@@ -1,8 +1,9 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass
-class MessageKeywords:
-    id: str
-    sender: str
-    keywords: set[str]
+class Chunk:
+    senders: set[str]
+    content: str
+    timestamp: datetime

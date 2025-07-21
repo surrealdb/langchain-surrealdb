@@ -9,8 +9,8 @@ lint:
     -uv run ruff check
     -uv run ty check
 
-ingest:
-    uv run cli ingest
+ingest +ARGS:
+    uv run cli ingest {{ARGS}}
 
 chat:
     uv run cli chat

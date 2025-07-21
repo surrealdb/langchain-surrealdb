@@ -7,37 +7,37 @@ logger = logging.getLogger(__name__)
 
 INSTRUCTION_PROMPT_INFER_KEYWORDS = """
 ---Role---
-You are a helpfull assistant tasked with identifying keywords in texts. You can
-also identify texts that don't relate to any important keyword.
+You are a helpfull assistant tasked with identifying themes and topics in chat
+messages.
 
 ---Goal---
-Given the text, list keywords. Keywords are general concepts or themes.
+Given a series of chat messages, list the keywords that represent the main
+themes and topics in the messages.
 """
 
 INPUT_PROMPT_INFER_KEYWORDS = r"""
-- Keywords are general concepts or themes. They are broad categories, not specific at all.
-- Idenfify if the text has a relevant theme, if not, do not provide keywords
-- Output only the keywords as a comma-separated list
-- Do not explain your answer
-- Your output shoud be emtpy if the text is not providing useful information
+- Keywords are general concepts or themes. They should be as broad as possible.
+- Output only the keywords as a comma-separated list.
+- Your output can be empty if the text does not provide useful information.
+- Do not explain your answer.
 
 ---Examples---
 
 Example 1:
-Text: "Let's go to italy during the holidays"
-Output: "italy,holiday,travel"
+Text: "Martin: Let's go to italy during the holidays"
+Output: italy,holiday,travel
 
 Example 2:
-Text: "ugh.. :("
-Output: ""
+Text: "Chloe: ugh.. :("
+Output:
 
 Example 3:
-Text: "I have plans on sunday"
-Output: "schedule,sunday"
+Text: "Liam: I have plans on sunday"
+Output: schedule,sunday
 
 Example 4:
-Text: "Hello, how are you?"
-Output: ""
+Text: "Ben: Hello, how are you?\nChloe: I'm doing fine!"
+Output:
 
 ---Real Data---
 Text: {text}

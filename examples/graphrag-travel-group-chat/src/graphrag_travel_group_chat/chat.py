@@ -1,7 +1,6 @@
 import logging
 
 import click
-from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import ChatOllama
 from surrealdb import (
@@ -14,7 +13,7 @@ from langchain_surrealdb.experimental.surrealdb_graph import SurrealDBGraph
 from langchain_surrealdb.vectorstores import SurrealDBVectorStore
 
 from .llm import infer_keywords
-from .retrieve import get_document_messages, search_close_by_time, vector_search
+from .retrieve import get_document_messages, vector_search
 
 # logging.basicConfig(level=logging.DEBUG)
 logging.basicConfig(level=logging.INFO)
@@ -44,17 +43,10 @@ def chat(
                 break
 
             # -- Find relevant docs
-            docs = vector_search(query, vector_store, k=5)
+            docs = vector_search(query, vector_store, k=5, score_threshold=0.3)
+            messages = get_document_messages(docs)
 
-            # -- Get recent messages (before and after)
-            docs_window: list[Document] = []
-            for doc in docs:
-                docs_window += search_close_by_time(doc, conn, vector_store.table)
-
-            click.secho(f"Retrieved {len(docs_window)}", fg="yellow")
-            messages = get_document_messages(docs_window)
-
-            chat_model = ChatOllama(model="llama3.2", temperature=0)
+            # chat_model = ChatOllama(model="llama3.2", temperature=0)
             prompt = ChatPromptTemplate(
                 [
                     ("system", "Role: You are a very helpful assitant"),
@@ -71,12 +63,9 @@ def chat(
             click.secho(res.content, fg="blue")
 
             # -- Query graph
-            _keywords: list[str] = (
-                docs[0].metadata.get("keywords", [])
-                + docs[1].metadata.get("keywords", [])
-                + docs[2].metadata.get("keywords", [])
-            )
-            query_keywords = list(infer_keywords(query) | set(_keywords))
+            _keywords: list[str] = []
+            _inferred = infer_keywords(query)
+            click.secho(f"Query keywords: {_inferred}", fg="green")
             chain = SurrealDBGraphQAChain.from_llm(
                 chat_model,
                 graph=graph_store,
@@ -85,9 +74,15 @@ def chat(
             )
             _ask(
                 f"""
-Find the answer to: "{query}" using the following keywords:
+Execute a query like this:
 
-{query_keywords}""",
+SELECT <-relation_described_by<-graph_document.content as doc
+    FROM graph_keyword WHERE name IN ["watch", "movie"]
+
+But using these keywords: {list(_inferred)}
+
+With the result, answer this query: "{query}"
+""",
                 chain,
             )
     except KeyboardInterrupt:

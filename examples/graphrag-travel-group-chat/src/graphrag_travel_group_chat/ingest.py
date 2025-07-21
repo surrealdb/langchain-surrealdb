@@ -1,20 +1,21 @@
+import enum
 import logging
 import time
-from dataclasses import asdict
 from datetime import datetime
 
 import click
 from langchain_community.chat_loaders import WhatsAppChatLoader
-from langchain_community.chat_loaders.utils import merge_chat_runs
 from langchain_community.graphs.graph_document import GraphDocument, Node, Relationship
 from langchain_core.documents import Document
 from nanoid import generate
 
+from graphrag_travel_group_chat.chat_loaders.instagram import InstagramChatLoader
 from langchain_surrealdb.experimental.surrealdb_graph import SurrealDBGraph
 from langchain_surrealdb.vectorstores import SurrealDBVectorStore
 
-from .definitions import MessageKeywords
+from .definitions import Chunk
 from .llm import infer_keywords
+from .utils import format_time, get_message_timestamp_and_sender, normalize_content
 
 # logging.basicConfig(level=logging.DEBUG)
 logging.basicConfig(level=logging.INFO)
@@ -22,66 +23,88 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def normalize_content(msg_content: str | list[str | dict]) -> str:
-    if isinstance(msg_content, str):
-        return msg_content
-    else:
-        return "\n".join(str(msg_content))
+class ChatProvider(enum.Enum):
+    WHATSAPP = enum.auto()
+    INSTAGRAM = enum.auto()
 
 
-def parse_time(message_time: str | None) -> str:
-    if message_time is None:
-        dt = datetime.now()
-    else:
-        try:
-            dt = datetime.strptime(message_time, "%d/%m/%Y, %H:%M:%S")
-        except ValueError:
-            dt = datetime.now()
-    if dt.tzinfo is None:
-        return f"{dt.isoformat(timespec='seconds')}+00:00"
-    return dt.isoformat(timespec="seconds")
-
-
-def ingest(vector_store: SurrealDBVectorStore, graph_store: SurrealDBGraph) -> None:
-    # loader = WhatsAppChatLoader(path="data/_chat.txt")
-    loader = WhatsAppChatLoader(path="data/_chat_test.txt")
-
+def ingest(
+    vector_store: SurrealDBVectorStore,
+    graph_store: SurrealDBGraph,
+    file_path: str,
+    provider: ChatProvider,
+    max_gap_in_s: int = 60 * 60 * 3,  # 3 hours
+) -> None:
+    # -- Load messages
+    match provider:
+        case ChatProvider.WHATSAPP:
+            loader = WhatsAppChatLoader(path=file_path)
+        case ChatProvider.INSTAGRAM:
+            loader = InstagramChatLoader(path=file_path)
+        case _:
+            raise ValueError(f"Unsupported provider: {provider}")
     raw_messages = loader.lazy_load()
-    # Merge consecutive messages from the same sender into a single message
-    chat_sessions = merge_chat_runs(raw_messages)
 
+    # -- Create chunks based on time gaps
+    chunks: list[Chunk] = []
+    curr_chunk: list[str] = []
+    chunk_senders = set()
+    last_time = None
+    for cs in raw_messages:
+        for message in cs.get("messages", []):
+            timestamp, sender = get_message_timestamp_and_sender(message)
+            if last_time is None:
+                last_time = timestamp
+            if (timestamp - last_time).total_seconds() > max_gap_in_s:
+                chunks.append(
+                    Chunk(
+                        senders=chunk_senders,
+                        content="\n".join(curr_chunk),
+                        timestamp=timestamp,
+                    )
+                )
+                curr_chunk = []
+                chunk_senders = set()
+            curr_chunk.append(
+                "\n".join([sender + ": " + normalize_content(message.content)])
+            )
+            chunk_senders.add(sender)
+            last_time = timestamp
+    chunks.append(
+        Chunk(
+            senders=chunk_senders,
+            content="\n".join(curr_chunk),
+            timestamp=last_time if last_time else datetime.now(),
+        )
+    )
+    click.echo(f"Created {len(chunks)} chunks")
+
+    # -- Infer keywords
     keywords: set[str] = set()
     ids: list[str] = []
     documents: list[Document] = []
-    messages: list[MessageKeywords] = []
-    for session in chat_sessions:
-        for message in session.get("messages", []):
-            events = message.additional_kwargs.get("events", [])
-            if not events:
-                continue
-            id = generate()
-            ids.append(id)
-            text = normalize_content(message.content)
-            _keywords = infer_keywords(text)
-            keywords.union(_keywords)
-            logger.info(keywords)
-            documents.append(
-                Document(
-                    page_content=text,
-                    metadata=message.additional_kwargs
-                    | {
-                        "message_time": parse_time(events[0].get("message_time")),
-                        "keywords": list(_keywords),
-                    },
-                )
+    for idx, chunk in enumerate(chunks):
+        click.echo(f"Inferring keywords for chunk {idx}...")
+
+        _keywords = infer_keywords(chunk.content)
+        keywords.union(_keywords)
+        logger.info(keywords)
+
+        id = generate()
+        ids.append(id)
+        documents.append(
+            Document(
+                page_content=chunk.content,
+                metadata={
+                    "message_time": format_time(chunk.timestamp),
+                    "senders": list(chunk.senders),
+                    "keywords": list(_keywords),
+                },
             )
-            messages.append(
-                MessageKeywords(
-                    id=id,
-                    sender=message.additional_kwargs.get("sender", ""),
-                    keywords=_keywords,
-                )
-            )
+        )
+
+    # -- Store documents in vectore store
+    click.echo("Adding documents to vector store...")
     vector_store.add_documents(documents, ids)
 
     # -- Generate graph
@@ -89,30 +112,29 @@ def ingest(vector_store: SurrealDBVectorStore, graph_store: SurrealDBGraph) -> N
     click.secho("Generating graph...", fg="magenta")
     graph_documents = []
     for idx, doc in enumerate(documents):
-        message = messages[idx]
         keyword_nodes = {
             key: Node(id=key, type="keyword", properties={"name": key})
-            for key in message.keywords
+            for key in doc.metadata.get("keywords", {})
         }
-        message_node = Node(id=message.id, type="document", properties=asdict(message))
-        sender_node = Node(
-            id=message.sender, type="sender", properties={"name": message.sender}
+        message_node = Node(
+            id=ids[idx],
+            type="document",
+            properties=doc.metadata | {"content": doc.page_content},
         )
-        for x in message.keywords:
+        for x in doc.metadata.get("keywords", {}):
             keyword_nodes[x] = Node(id=x, type="keyword", properties={"name": x})
-        nodes = [sender_node, message_node] + list(keyword_nodes.values())
+        nodes = [message_node] + list(keyword_nodes.values())
         relationships = [
-            Relationship(source=message_node, target=sender_node, type="sent_by")
-        ] + [
             Relationship(
                 source=message_node, target=keyword_nodes[x], type="described_by"
             )
-            for x in message.keywords
+            for x in doc.metadata.get("keywords", {})
         ]
         graph_documents.append(
             GraphDocument(nodes=nodes, relationships=relationships, source=doc)
         )
-    # TODO: message_node is not being created
+
+    # -- Store graph
     graph_store.add_graph_documents(graph_documents, include_source=False)
     end_time = time.monotonic()
     time_taken = end_time - start_time
