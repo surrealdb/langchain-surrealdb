@@ -14,7 +14,7 @@ def ingest(vector_store: SurrealDBVectorStore, graph_store: SurrealDBGraph) -> N
     # -- Insert documents
     symptom_descriptions: list[Document] = []
     parsed_symptoms: list[Symptom] = []
-    with open("./symptoms.yaml", "r") as f:
+    with open("./data/symptoms.yaml", "r") as f:
         symptoms = yaml.safe_load(f)
         assert isinstance(symptoms, list), "failed to load symptoms"
         for category in symptoms:
