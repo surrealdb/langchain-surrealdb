@@ -66,7 +66,14 @@ def ingest(
                 curr_chunk = []
                 chunk_senders = set()
             curr_chunk.append(
-                "\n".join([sender + ": " + normalize_content(message.content)])
+                "\n".join(
+                    [
+                        f"[{timestamp}] "
+                        + sender
+                        + ": "
+                        + normalize_content(message.content)
+                    ]
+                )
             )
             chunk_senders.add(sender)
             last_time = timestamp
@@ -86,7 +93,7 @@ def ingest(
     for idx, chunk in enumerate(chunks):
         click.echo(f"Inferring keywords for chunk {idx}...")
 
-        _keywords = infer_keywords(chunk.content)
+        _keywords = infer_keywords(chunk.content, None)
         keywords.union(_keywords)
         logger.info(keywords)
 
@@ -103,7 +110,7 @@ def ingest(
             )
         )
 
-    # -- Store documents in vectore store
+    # -- Store documents in vector store
     click.echo("Adding documents to vector store...")
     vector_store.add_documents(documents, ids)
 

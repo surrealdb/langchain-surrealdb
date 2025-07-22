@@ -17,11 +17,8 @@ def vector_search(
     k: int = 3,
     score_threshold: float = 0.3,
 ) -> list[Document]:
-    click.echo(f'\nSearch: "{query}"')
-
-    # -- Similarity search
     results_w_score = vector_store.similarity_search_with_score(query, k=k)
-    click.echo("\nsimilarity_search_with_score")
+    click.echo("\nsimilarity_search_with_score:")
     for doc, score in results_w_score:
         click.secho(
             f"- [{score:.0%}] {doc.page_content[:70].split(NEWLINE)[0]}",
@@ -32,6 +29,11 @@ def vector_search(
         return [doc for doc, score in results_w_score[:k] if score >= score_threshold]
     else:
         raise Exception("No results found")
+
+
+def format_document_messages(docs: list[Document]) -> list[str]:
+    result = [doc.page_content for doc in docs]
+    return result
 
 
 # def search_close_by_time(
@@ -59,9 +61,3 @@ def vector_search(
 #         Document(page_content=x.get("text", ""), metadata=x.get("metadata"))
 #         for x in res
 #     ]
-
-
-def get_document_messages(docs: list[Document]) -> str:
-    return "\n\n".join(
-        [f"{doc.metadata.get('sender')}: {doc.page_content}" for doc in docs]
-    )

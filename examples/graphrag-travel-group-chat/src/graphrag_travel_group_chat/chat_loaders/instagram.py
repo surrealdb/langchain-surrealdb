@@ -24,7 +24,7 @@ class InstagramChatLoader(BaseChatLoader):
                 zip directory, folder, or file.
         """
         self.path = path
-        ignore_lines = [".* sent an attachment."]
+        ignore_lines = [".* sent an attachment.", "Liked a message"]
         self._ignore_lines = re.compile(
             r"(" + "|".join([line for line in ignore_lines]) + r")",
             flags=re.IGNORECASE,
