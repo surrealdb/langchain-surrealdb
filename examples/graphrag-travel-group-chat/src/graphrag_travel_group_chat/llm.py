@@ -47,7 +47,7 @@ Output:
 ---Real Data---
 Text: {text}
 Output:
-"""  # noqa: E501
+"""
 
 ADDITIONAL_INSTRUCTIONS = r"""
 """
@@ -73,7 +73,7 @@ provided chat extracts.
 {context}
 """
 
-SUMMARIZE_ANSWER_PROMPT = r"""
+SUMMARIZE_ANSWER_PROMPT = """
 ---Role---
 You are a helpful assistant tasked with answering user questions based on the
 user's conversations with other people.
