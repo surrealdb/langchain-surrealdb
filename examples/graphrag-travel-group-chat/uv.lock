@@ -287,7 +287,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = ">=8.2.1" },
-    { name = "langchain-community", editable = "../../../langchain-community/libs/community" },
+    { name = "langchain-community", git = "https://github.com/martinschaer/langchain-community.git?subdirectory=libs%2Fcommunity&rev=fix%2Fwhatsapp-chat-loader" },
     { name = "langchain-ollama", specifier = ">=0.3.5" },
     { name = "langchain-surrealdb", editable = "../../" },
     { name = "nanoid", specifier = ">=2.0.0" },
@@ -428,8 +428,8 @@ wheels = [
 
 [[package]]
 name = "langchain-community"
-version = "0.3.23"
-source = { editable = "../../../langchain-community/libs/community" }
+version = "0.3.27"
+source = { git = "https://github.com/martinschaer/langchain-community.git?subdirectory=libs%2Fcommunity&rev=fix%2Fwhatsapp-chat-loader#b85a7c5595bb0f623156fececd42bfca4a545c0f" }
 dependencies = [
     { name = "aiohttp" },
     { name = "dataclasses-json" },
@@ -442,78 +442,7 @@ dependencies = [
     { name = "pyyaml" },
     { name = "requests" },
     { name = "sqlalchemy" },
-    { name = "surrealdb" },
     { name = "tenacity" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "aiohttp", specifier = ">=3.8.3,<4.0.0" },
-    { name = "dataclasses-json", specifier = ">=0.5.7,<0.7" },
-    { name = "httpx-sse", specifier = ">=0.4.0,<1.0.0" },
-    { name = "langchain", specifier = ">=0.3.24,<1.0.0" },
-    { name = "langchain-core", specifier = ">=0.3.56,<1.0.0" },
-    { name = "langsmith", specifier = ">=0.1.125,<0.4" },
-    { name = "numpy", marker = "python_full_version < '3.13'", specifier = ">=1.26.2" },
-    { name = "numpy", marker = "python_full_version >= '3.13'", specifier = ">=2.1.0" },
-    { name = "pydantic-settings", specifier = ">=2.4.0,<3.0.0" },
-    { name = "pyyaml", specifier = ">=5.3" },
-    { name = "requests", specifier = ">=2,<3" },
-    { name = "sqlalchemy", specifier = ">=1.4,<3" },
-    { name = "surrealdb", directory = "../../../surrealdb.py" },
-    { name = "tenacity", specifier = ">=8.1.0,!=8.4.0,<10" },
-]
-
-[package.metadata.requires-dev]
-codespell = [{ name = "codespell", specifier = ">=2.2.0,<3.0.0" }]
-dev = [
-    { name = "jupyter", specifier = ">=1.0.0,<2.0.0" },
-    { name = "langchain-core" },
-    { name = "setuptools", specifier = ">=67.6.1,<68.0.0" },
-]
-lint = [
-    { name = "cffi", marker = "python_full_version < '3.10'", specifier = "<1.17.1" },
-    { name = "cffi", marker = "python_full_version >= '3.10'" },
-    { name = "ruff", specifier = ">=0.9,<0.10" },
-]
-test = [
-    { name = "blockbuster", specifier = ">=1.5.18,<1.6" },
-    { name = "cffi", marker = "python_full_version < '3.10'", specifier = "<1.17.1" },
-    { name = "cffi", marker = "python_full_version >= '3.10'" },
-    { name = "duckdb-engine", specifier = ">=0.13.6,<1.0.0" },
-    { name = "freezegun", specifier = ">=1.2.2,<2.0.0" },
-    { name = "langchain-tests" },
-    { name = "lark", specifier = ">=1.1.5,<2.0.0" },
-    { name = "pandas", specifier = ">=2.0.0,<3.0.0" },
-    { name = "pytest", specifier = ">=7.4.4,<8.0.0" },
-    { name = "pytest-asyncio", specifier = ">=0.20.3,<1.0.0" },
-    { name = "pytest-cov", specifier = ">=4.1.0,<5.0.0" },
-    { name = "pytest-dotenv", specifier = ">=0.5.2,<1.0.0" },
-    { name = "pytest-mock", specifier = ">=3.10.0,<4.0.0" },
-    { name = "pytest-socket", specifier = ">=0.6.0,<1.0.0" },
-    { name = "pytest-watcher", specifier = ">=0.2.6,<1.0.0" },
-    { name = "pytest-xdist", specifier = ">=3.6.1,<4.0.0" },
-    { name = "requests-mock", specifier = ">=1.11.0,<2.0.0" },
-    { name = "responses", specifier = ">=0.22.0,<1.0.0" },
-    { name = "syrupy", specifier = ">=4.0.2,<5.0.0" },
-    { name = "toml", specifier = ">=0.10.2" },
-]
-test-integration = [
-    { name = "pytest-vcr", specifier = ">=1.0.2,<2.0.0" },
-    { name = "vcrpy", specifier = ">=6,<7" },
-]
-typing = [
-    { name = "langchain" },
-    { name = "langchain-core" },
-    { name = "langchain-text-splitters" },
-    { name = "mypy", specifier = ">=1.15,<2.0" },
-    { name = "mypy-protobuf", specifier = ">=3.0.0,<4.0.0" },
-    { name = "types-chardet", specifier = ">=5.0.4.6,<6.0.0.0" },
-    { name = "types-pytz", specifier = ">=2023.3.0.0,<2024.0.0.0" },
-    { name = "types-pyyaml", specifier = ">=6.0.12.2,<7.0.0.0" },
-    { name = "types-redis", specifier = ">=4.3.21.6,<5.0.0.0" },
-    { name = "types-requests", specifier = ">=2.28.11.5,<3.0.0.0" },
-    { name = "types-toml", specifier = ">=0.10.8.1,<1.0.0.0" },
 ]
 
 [[package]]
@@ -1029,31 +958,17 @@ wheels = [
 [[package]]
 name = "surrealdb"
 version = "1.0.5"
-source = { directory = "../../../surrealdb.py" }
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "cerberus" },
     { name = "requests" },
     { name = "websockets" },
 ]
-
-[package.metadata]
-requires-dist = [
-    { name = "aiohttp", specifier = ">=3.8.0" },
-    { name = "cerberus", specifier = ">=1.3.0" },
-    { name = "requests", specifier = ">=2.25.0" },
-    { name = "typing-extensions", marker = "python_full_version < '3.12'", specifier = ">=4.0.0" },
-    { name = "websockets", specifier = ">=10.0" },
+sdist = { url = "https://files.pythonhosted.org/packages/a7/6b/e2df6d6059d39604167ab3f1f0e1405232bbe955eb6c5f6cdb84685562ed/surrealdb-1.0.5.tar.gz", hash = "sha256:657d18afe63371e270dd418e863580df8ba557a94590490319603c6177f816d7", size = 66447, upload_time = "2025-07-21T13:09:50.725Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a9/ac/c6ddad7d2cac77b9cc4abc4e13829415331f63c0648e196b9e84a0818604/surrealdb-1.0.5-py3-none-any.whl", hash = "sha256:a8430505dbdcf9551b6c3df1cd62c1ff979fb0f855b39b3d9b9426b309ffa395", size = 62606, upload_time = "2025-07-21T13:09:49.276Z" },
 ]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "hypothesis", specifier = ">=6.135.16" },
-    { name = "mypy", specifier = ">=1.0.0" },
-    { name = "ruff", specifier = ">=0.12.0" },
-    { name = "types-requests", specifier = ">=2.25.0" },
-]
-test = [{ name = "hypothesis", specifier = ">=6.135.16" }]
 
 [[package]]
 name = "tenacity"
