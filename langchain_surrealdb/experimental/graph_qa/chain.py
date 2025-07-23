@@ -18,7 +18,7 @@ from langchain_surrealdb.experimental.surrealdb_graph import SurrealDBGraph
 INTERMEDIATE_STEPS_KEY = "intermediate_steps"
 
 SURQL_EXAMPLES = """
-SELECT <-?<-? FROM node_a WHERE name IN ["foo", "bar", "zar"]
+SELECT <-?<-? FROM node_a WHERE name IN ["foo", "bar", "zar"];
 
 SELECT <-relation_Attends<-graph_Practice as practice FROM graph_Symptom WHERE name = "Headache";
 
@@ -31,6 +31,9 @@ SELECT name,
     <-relation_Treats<-graph_Treatment as treatment
 FROM graph_Symptom
 WHERE name IN ["Headache", "Sore Throat"];
+
+SELECT <-relation_described_by<-graph_document.content as doc
+    FROM graph_keyword WHERE name IN ["watch", "movie"];
 """  # noqa: E501
 
 

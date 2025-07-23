@@ -1,5 +1,6 @@
 mod examples-basic './examples/basic'
 mod examples-graph './examples/graph'
+mod examples-graphrag './examples/graphrag-travel-group-chat'
 
 default:
     @just --list

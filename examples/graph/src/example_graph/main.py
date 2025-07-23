@@ -25,7 +25,7 @@ def ingest() -> None:
 @click.option("--verbose", is_flag=True)
 def chat(verbose: bool) -> None:
     vector_store, graph_store, conn = init_stores(ns=ns, db=db)
-    chat_model = ChatOllama(model="llama3.2", temperature=0)
+    chat_model = ChatOllama(model="llama3.2", temperature=0.8)
 
     def query_logger(q: str, results: int) -> None:
         conn.insert("generated_query", {"query": q, "results": results})

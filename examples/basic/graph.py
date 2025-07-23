@@ -13,7 +13,7 @@ from langchain_surrealdb.vectorstores import SurrealDBVectorStore
 conn = Surreal("ws://localhost:8000/rpc")
 conn.signin({"username": "root", "password": "root"})
 conn.use("langchain", "demo")
-vector_store = SurrealDBVectorStore(OllamaEmbeddings(model="llama3.2"), conn)
+vector_store = SurrealDBVectorStore(OllamaEmbeddings(model="all-minilm:22m"), conn)
 graph_store = SurrealDBGraph(conn)
 
 vector_store.delete()
@@ -41,7 +41,7 @@ node_surrealism = Node(id="surrealism", type="Document")
 # People nodes
 node_martin = Node(id="martin", type="People", properties={"name": "Martin"})
 node_tobie = Node(id="tobie", type="People", properties={"name": "Tobie"})
-node_max = Node(id="max", type="People", properties={"name":"Max Ernst"})
+node_max = Node(id="max", type="People", properties={"name": "Max Ernst"})
 
 # Edges
 graph_documents = [
@@ -49,7 +49,7 @@ graph_documents = [
         nodes=[node_martin, node_tobie, node_sdb],
         relationships=[
             Relationship(source=node_martin, target=node_sdb, type="KnowsAbout"),
-            Relationship(source=node_tobie, target=node_sdb, type="KnowsAbout")
+            Relationship(source=node_tobie, target=node_sdb, type="KnowsAbout"),
         ],
         source=doc1,
     ),

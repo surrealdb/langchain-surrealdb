@@ -4,5 +4,5 @@ default:
 ingest:
     poetry run run ingest
 
-chat *ARGS:
-    poetry run run chat {{ARGS}}
+chat:
+    poetry run run chat
