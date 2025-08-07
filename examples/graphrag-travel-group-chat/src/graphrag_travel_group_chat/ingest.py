@@ -30,6 +30,7 @@ class ChatProvider(enum.Enum):
 
 def ingest(
     vector_store: SurrealDBVectorStore,
+    vector_store_keywords: SurrealDBVectorStore,
     graph_store: SurrealDBGraph,
     file_path: str,
     provider: ChatProvider,
@@ -94,8 +95,7 @@ def ingest(
         click.echo(f"Inferring keywords for chunk {idx}...")
 
         _keywords = infer_keywords(chunk.content, None)
-        keywords.union(_keywords)
-        logger.info(keywords)
+        keywords.update(_keywords)
 
         id = generate()
         ids.append(id)
@@ -109,6 +109,12 @@ def ingest(
                 },
             )
         )
+
+    # -- Store keywords in vector store
+    keywords_ids = list(keywords)
+    click.echo(f"Adding keywords to vector store {keywords_ids}...")
+    keywords_as_docs = [Document(page_content=k) for k in keywords_ids]
+    vector_store_keywords.add_documents(keywords_as_docs, keywords_ids)
 
     # -- Store documents in vector store
     click.echo("Adding documents to vector store...")

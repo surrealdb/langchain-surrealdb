@@ -23,6 +23,7 @@ def init_stores(
     clear: bool = False,
 ) -> tuple[
     SurrealDBVectorStore,
+    SurrealDBVectorStore,
     SurrealDBGraph,
     BlockingWsSurrealConnection | BlockingHttpSurrealConnection,
 ]:
@@ -30,10 +31,17 @@ def init_stores(
     conn.signin({"username": user, "password": password})
     conn.use(ns, db)
     vector_store_ = SurrealDBVectorStore(OllamaEmbeddings(model="all-minilm:22m"), conn)
+    vector_store_keywords_ = SurrealDBVectorStore(
+        OllamaEmbeddings(model="all-minilm:22m"),
+        conn,
+        "keywords",
+        "keywords_vector_index",
+    )
     graph_store_ = SurrealDBGraph(conn)
 
     if clear:
         vector_store_.delete()
+        vector_store_keywords_.delete()
         graph_store_.delete_nodes()
 
     # create event
@@ -46,4 +54,4 @@ def init_stores(
         """)
     logger.debug(f"create event documents_on_create: {res}")
 
-    return vector_store_, graph_store_, conn
+    return vector_store_, vector_store_keywords_, graph_store_, conn
