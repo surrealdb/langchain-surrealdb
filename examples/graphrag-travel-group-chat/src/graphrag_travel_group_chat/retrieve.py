@@ -89,10 +89,6 @@ def graph_query(
     similar_keyword_docs: list[tuple[Document, float]],
 ) -> list[str]:
     similar_keywords = [x.page_content for x, _score in similar_keyword_docs]
-    # query = dedent("""
-    #     SELECT id,<-relation_described_by<-graph_document.{content,id} as doc
-    #         FROM graph_keyword WHERE name IN $kws
-    # """)
     query = dedent("""
         SELECT id, content from array::flatten(
             SELECT VALUE doc FROM (
@@ -105,7 +101,6 @@ def graph_query(
     result = conn.query(query, {"kws": similar_keywords})
     if isinstance(result, list):
         result = [x.get("content", []) for x in result]
-        # result = list(itertools.chain.from_iterable(result))
     else:
         result = []
     return result
