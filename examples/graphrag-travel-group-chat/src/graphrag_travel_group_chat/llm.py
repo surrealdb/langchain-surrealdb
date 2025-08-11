@@ -1,9 +1,5 @@
-import logging
-
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import ChatOllama
-
-logger = logging.getLogger(__name__)
 
 INSTRUCTION_PROMPT_INFER_KEYWORDS = """
 ---Role---
@@ -13,17 +9,15 @@ messages.
 ---Goal---
 Given a series of chat messages, list the keywords that represent the main
 themes and topics in the messages.
-
----Steps---
-1. Summarize the text in one main theme or topic
-2. Think about the other themes or topics that are mentioned in the text
 """
 
 INPUT_PROMPT_INFER_KEYWORDS = r"""
+- Include at least 1 keyword that describes the feeling or sentiment of the
+converation
 - Keywords are general concepts or themes. They should be as broad as possible.
 - Output only the keywords as a comma-separated list.
-- Your output can be empty if the text does not provide useful information.
 - Do not explain your answer.
+
 {additional_instructions}
 
 ---Examples---
@@ -82,7 +76,8 @@ user's conversations with other people.
 Provide an answer to the user's query based on the provided context.
 
 ---Instructions---
-- If the user says "we", he means himself and his/her chat friends, not yourself.
+- If the user says "we", he means himself and his/her chat friends, it does not
+    include yourself.
 - You know the user from before.
 - If the texts are contradictory, use the ones that have more details to form
     your answer.
@@ -113,7 +108,6 @@ def infer_keywords(text: str, all_keywords: list[str] | None) -> set[str]:
             else "",
         }
     )
-    logger.debug(f"_infer_keywords: {res}")
     if isinstance(res.content, str):
         return set([x.strip().lower() for x in res.content.split(",")])
     else:

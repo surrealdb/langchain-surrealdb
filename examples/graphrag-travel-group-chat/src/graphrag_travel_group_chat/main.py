@@ -16,16 +16,29 @@ def cli() -> None: ...
 @cli.command()
 @click.argument("provider", type=click.Choice(ChatProvider, case_sensitive=False))
 @click.argument("file", type=click.Path(exists=True))
-def ingest(file: str, provider: ChatProvider) -> None:
-    vector_store, graph_store, conn = init_stores(ns=ns, db=db, clear=True)
-    ingest_handler(vector_store, graph_store, file, provider, max_gap_in_s=60 * 60 * 3)
+@click.option("--db", default=db)
+def ingest(file: str, provider: ChatProvider, db: str) -> None:
+    vector_store, vector_store_keywords, graph_store, conn = init_stores(
+        ns=ns, db=db, clear=True
+    )
+    ingest_handler(
+        vector_store,
+        vector_store_keywords,
+        graph_store,
+        file,
+        provider,
+        max_gap_in_s=60 * 60 * 3,
+    )
     conn.close()
 
 
 @cli.command()
-def chat() -> None:
-    vector_store, graph_store, conn = init_stores(ns=ns, db=db, clear=False)
-    chat_handler(conn, vector_store, graph_store, verbose=True)
+@click.option("--db", default=db)
+def chat(db: str) -> None:
+    vector_store, vector_store_keywords, _graph_store, conn = init_stores(
+        ns=ns, db=db, clear=False
+    )
+    chat_handler(conn, vector_store, vector_store_keywords)
     conn.close()
 
 

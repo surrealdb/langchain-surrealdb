@@ -12,5 +12,5 @@ lint:
 ingest +ARGS:
     uv run cli ingest {{ARGS}}
 
-chat:
-    uv run cli chat
+chat *ARGS:
+    uv run cli chat {{ARGS}}
