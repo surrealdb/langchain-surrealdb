@@ -1,4 +1,3 @@
-import itertools
 from textwrap import dedent
 
 import click
@@ -90,14 +89,23 @@ def graph_query(
     similar_keyword_docs: list[tuple[Document, float]],
 ) -> list[str]:
     similar_keywords = [x.page_content for x, _score in similar_keyword_docs]
+    # query = dedent("""
+    #     SELECT id,<-relation_described_by<-graph_document.{content,id} as doc
+    #         FROM graph_keyword WHERE name IN $kws
+    # """)
     query = dedent("""
-        SELECT id,<-relation_described_by<-graph_document.content as doc
-            FROM graph_keyword WHERE name IN $kws GROUP BY id
+        SELECT id, content from array::flatten(
+            SELECT VALUE doc FROM (
+                SELECT (<-relation_described_by<-graph_document.{content,id}) AS doc
+                FROM graph_keyword WHERE name IN $kws
+            )
+        )
+        GROUP BY id
     """)
     result = conn.query(query, {"kws": similar_keywords})
     if isinstance(result, list):
-        result = [x.get("doc", []) for x in result]
-        result = list(itertools.chain.from_iterable(result))
+        result = [x.get("content", []) for x in result]
+        # result = list(itertools.chain.from_iterable(result))
     else:
         result = []
     return result

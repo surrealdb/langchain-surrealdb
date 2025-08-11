@@ -7,7 +7,6 @@ from surrealdb import (
     BlockingWsSurrealConnection,
 )
 
-from langchain_surrealdb.experimental.surrealdb_graph import SurrealDBGraph
 from langchain_surrealdb.vectorstores import SurrealDBVectorStore
 
 from .llm import generate_answer_from_messages, infer_keywords, summarize_answer
@@ -18,9 +17,10 @@ def chat(
     conn: BlockingWsSurrealConnection | BlockingHttpSurrealConnection,
     vector_store: SurrealDBVectorStore,
     vector_store_keywords: SurrealDBVectorStore,
-    graph_store: SurrealDBGraph,
-    *,
-    verbose: bool,
+    # Include SurrealDBGraph if you want to try SurrealDBGraphQAChain to have
+    # the LLM generate the surql graph query. I left it out because it's an
+    # overkill for a simple graph like the one I'm generating in this example
+    # graph_store: SurrealDBGraph,
 ) -> None:
     res = conn.query("SELECT VALUE name FROM graph_keyword")
     assert isinstance(res, list)
@@ -74,13 +74,14 @@ def chat(
 
             # -- Query graph
 
-            # graph_qa uses SurrealDBGraphQAChain, which uses the LLM to
-            # generate the Surql, which is an overkill
+            # - graph_qa uses SurrealDBGraphQAChain, which uses the LLM to
+            # generate the surql, which is an overkill
             # graph_answer = graph_qa(graph_store, similar_keyword_docs, query, verbose)
 
-            # graph_query uses a pre-defined query template and executes it on
+            # - graph_query uses a pre-defined query template and executes it on
             # the graph database
             graph_results = graph_query(conn, similar_keyword_docs)
+            click.secho(len(graph_results), fg="yellow")
             graph_answer = generate_answer_from_messages(
                 graph_results, query, user_name
             )
@@ -96,7 +97,9 @@ def chat(
             len_all = len(messages) + len(graph_results)
             len_dedupped = len(dedupped)
             if len_dedupped != len_all:
-                click.secho(f"Dedupped from {len_all} to {len_dedupped}", fg="yellow")
+                click.secho(
+                    f"Intersection: from {len_all} to {len_dedupped} docs", fg="yellow"
+                )
             final_answer = summarize_answer(
                 dedupped,
                 query,

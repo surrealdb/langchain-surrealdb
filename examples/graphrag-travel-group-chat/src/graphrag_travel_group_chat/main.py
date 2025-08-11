@@ -35,10 +35,10 @@ def ingest(file: str, provider: ChatProvider, db: str) -> None:
 @cli.command()
 @click.option("--db", default=db)
 def chat(db: str) -> None:
-    vector_store, vector_store_keywords, graph_store, conn = init_stores(
+    vector_store, vector_store_keywords, _graph_store, conn = init_stores(
         ns=ns, db=db, clear=False
     )
-    chat_handler(conn, vector_store, vector_store_keywords, graph_store, verbose=True)
+    chat_handler(conn, vector_store, vector_store_keywords)
     conn.close()
 
 
