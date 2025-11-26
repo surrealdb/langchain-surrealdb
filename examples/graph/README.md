@@ -42,13 +42,13 @@ Or without just:
 ```shell
 # install deps
 cd examples/graph
-poetry update
+uv sync
 
 # run ingest script
-poetry run run ingest
+uv run run ingest
 
 # run chat script
-poetry run run chat
+uv run run chat
 ```
 
 ## Future work

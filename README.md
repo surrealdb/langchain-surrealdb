@@ -46,11 +46,25 @@ This package contains the LangChain integration with SurrealDB
 ```bash
 # -- Using pip
 pip install -U langchain-surrealdb surrealdb
-# -- Using poetry
-poetry add langchain-surrealdb surrealdb
-# -- Using uv
-uv add --upgrade langchain-surrealdb surrealdb
+# -- Using uv (preferred for contributors)
+uv add langchain-surrealdb surrealdb
 ```
+
+## Local development with uv
+
+```bash
+# install all dependency groups and extras
+uv sync --all-groups --all-extras
+# run the test suite
+uv run pytest
+# run formatting + lint checks
+make lint
+```
+
+To exercise the included examples:
+
+- `cd examples/basic && uv sync && uv run python main.py`
+- `cd examples/graph && uv sync && uv run python graph.py`
 
 ## Requirements
 

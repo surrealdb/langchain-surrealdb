@@ -6,15 +6,15 @@ default:
     @just --list
 
 format:
-    #poetry run ruff format
+    #uv run ruff format
     make format
 
 lint:
-    -time poetry run ty check
+    -time uv run ty check
     make lint
 
 # Install dependencies
 install:
-    poetry update --with lint,typing,test
-    cd examples/basic && poetry update
-    cd examples/graph && poetry update && poetry install
+    uv sync --all-groups --all-extras
+    cd examples/basic && uv sync
+    cd examples/graph && uv sync

@@ -2,7 +2,7 @@ default:
     @just --list
 
 ingest:
-    poetry run run ingest
+    uv run run ingest
 
 chat:
-    poetry run run chat
+    uv run run chat

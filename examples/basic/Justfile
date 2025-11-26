@@ -14,7 +14,7 @@ docker-run:
     docker run -ti --rm --name demo-langchain demo-langchain
 
 run:
-    poetry run python main.py
+    uv run python main.py
 
 run-graph:
-    poetry run python graph.py
+    uv run python graph.py

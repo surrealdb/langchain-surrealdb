@@ -25,6 +25,14 @@ Then, using [just](https://just.systems/man/en/packages.html) from the root dire
 
 ```shell
 just install
-just examples-basic ru
+just examples-basic run
+```
+
+Or manually:
+
+```shell
+cd examples/basic
+uv sync
+uv run python main.py
 ```
 
