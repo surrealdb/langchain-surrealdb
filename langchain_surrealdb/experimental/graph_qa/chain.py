@@ -1,5 +1,5 @@
 import re
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable
 
 from langchain_core.callbacks import CallbackManagerForChainRun
 from langchain_core.language_models import BaseLanguageModel
@@ -105,7 +105,7 @@ class SurrealDBGraphQAChain(Chain):
     def _call(
         self,
         inputs: dict[str, Any],
-        run_manager: Optional[CallbackManagerForChainRun] = None,
+        run_manager: CallbackManagerForChainRun | None = None,
     ) -> dict[str, Any]:
         _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
         callbacks = _run_manager.get_child()
@@ -119,7 +119,7 @@ class SurrealDBGraphQAChain(Chain):
         args.update(inputs)
         _run_manager.on_text(f"Query: {question}", end="\n", verbose=self.verbose)
 
-        intermediate_steps: List = []
+        intermediate_steps: list[dict[str, Any]] = []
 
         result = self.surql_generation_chain.invoke(args, callbacks=callbacks)
         generated_surql = extract_surql(result["text"])

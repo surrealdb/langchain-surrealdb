@@ -1,5 +1,5 @@
 import json
-from typing import Any, List, Optional, Tuple, Union
+from typing import Any
 
 from langchain_community.graphs.graph_document import GraphDocument, Node
 from langchain_community.graphs.graph_store import GraphStore
@@ -9,10 +9,11 @@ from surrealdb import (
     BlockingHttpSurrealConnection,
     BlockingWsSurrealConnection,
     RecordID,
+    Value,
 )
 
-SurrealConnection = Union[BlockingWsSurrealConnection, BlockingHttpSurrealConnection]
-SurrealAsyncConnection = Union[AsyncWsSurrealConnection, AsyncHttpSurrealConnection]
+SurrealConnection = BlockingWsSurrealConnection | BlockingHttpSurrealConnection
+SurrealAsyncConnection = AsyncWsSurrealConnection | AsyncHttpSurrealConnection
 
 CREATE_SOURCE_QUERY = """
     CREATE type::table($table)
@@ -42,7 +43,7 @@ class SurrealDBGraph(GraphStore):
         self.table_prefix = table_prefix
         self.relation_prefix = relation_prefix
 
-    def _query(self, surql: str, vars: dict) -> dict:
+    def _query(self, surql: str, vars: dict[str, Value]) -> dict[str, Any]:
         return self.connection.query_raw(surql, vars)
 
     def _build_node_recordid(self, node: Node) -> RecordID:
@@ -67,7 +68,7 @@ class SurrealDBGraph(GraphStore):
         """Return the schema of the Graph database"""
         raise NotImplementedError
 
-    def query(self, query: str, params: dict = {}) -> list[dict[str, Any]]:
+    def query(self, query: str, params: dict[str, Value] = {}) -> list[dict[str, Any]]:
         """Query the graph."""
         res = self._query(query, params)
         if "error" in res:
@@ -80,7 +81,7 @@ class SurrealDBGraph(GraphStore):
         raise NotImplementedError
 
     def delete_nodes(
-        self, ids: Optional[List[Tuple[str, Optional[str]]]] = None, **kwargs: Any
+        self, ids: list[tuple[str, str | None]] | None = None, **kwargs: Any
     ) -> None:
         """Delete nodes (and relations) in the graph."""
         if ids is not None:
