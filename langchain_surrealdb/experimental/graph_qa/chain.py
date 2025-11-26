@@ -1,11 +1,18 @@
 import re
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from langchain.chains.base import Chain
-from langchain.chains.llm import LLMChain
 from langchain_core.callbacks import CallbackManagerForChainRun
 from langchain_core.language_models import BaseLanguageModel
 from langchain_core.prompts import BasePromptTemplate
+
+try:
+    from langchain_classic.chains.base import Chain
+    from langchain_classic.chains.llm import LLMChain
+except ImportError as exc:
+    raise ImportError(
+        "SurrealDB graph QA requires langchain-classic. "
+        "Install with `pip install langchain-surrealdb[graph-qa]`."
+    ) from exc
 from pydantic import Field
 
 from langchain_surrealdb.experimental.graph_qa.prompts import (

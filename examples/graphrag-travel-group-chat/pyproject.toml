@@ -6,8 +6,9 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "click>=8.2.1",
-    "langchain-community",
-    "langchain-ollama>=0.3.5",
+    "langchain-core>=1.0.0,<2.0.0",
+    "langchain-community>=0.4.0,<1.0.0",
+    "langchain-ollama>=1.0.0,<2.0.0",
     "langchain-surrealdb",
     "nanoid>=2.0.0",
 ]
@@ -17,7 +18,6 @@ cli = "graphrag_travel_group_chat.main:cli"
 
 [tool.uv.sources]
 langchain-surrealdb = { path = "../../", editable = true }
-langchain-community = { git = "https://github.com/martinschaer/langchain-community.git", subdirectory = "libs/community", rev = "fix/whatsapp-chat-loader" }
 
 [dependency-groups]
 dev = ["ruff>=0.12.4", "ty>=0.0.1a15"]

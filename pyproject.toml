@@ -7,12 +7,11 @@ name = "langchain-surrealdb"
 version = "0.1.4"
 description = "An integration package connecting SurrealDB and LangChain"
 readme = "README.md"
-requires-python = ">=3.9,<4.0"
+requires-python = ">=3.10,<4.0"
 license = { file = "LICENSE" }
 dependencies = [
-    "langchain-core>=0.3.15,<0.4.0",
-    "surrealdb>=1.0.4,<2.0.0",
-    "langchain-experimental>=0.3.4,<0.4.0",
+    "langchain-core>=1.0.0,<2.0.0",
+    "surrealdb @ git+https://github.com/surrealdb/surrealdb.py.git",
     "numpy>=1.26.0; python_version < \"3.13\"",
     "numpy>=2.1.0; python_version >= \"3.13\"",
 ]
@@ -27,7 +26,7 @@ test = [
     "pytest>=7.4.3,<8.0.0",
     "pytest-asyncio>=0.23.2,<0.24.0",
     "pytest-watcher>=0.3.4,<0.4.0",
-    "langchain-tests>=0.3.5,<0.4.0",
+    "langchain-tests>=1.0.0,<2.0.0",
 ]
 codespell = ["codespell>=2.2.6,<3.0.0"]
 lint = ["ruff>=0.11.10,<0.12.0"]
@@ -35,7 +34,8 @@ typing = [
     "mypy>=1.15.0,<2.0.0",
     "ty>=0.0.1a3,<0.1.0",
 ]
-docs = ["langchain-ollama>=0.3.3,<0.4.0"]
+docs = ["langchain-ollama>=1.0.0,<2.0.0"]
+graph-qa = ["langchain-classic>=1.0.0,<2.0.0"]
 
 [tool.uv]
 default-groups = ["dev", "test", "lint", "typing", "codespell"]
@@ -46,7 +46,7 @@ test = [
     "pytest>=7.4.3,<8.0.0",
     "pytest-asyncio>=0.23.2,<0.24.0",
     "pytest-watcher>=0.3.4,<0.4.0",
-    "langchain-tests>=0.3.5,<0.4.0",
+    "langchain-tests>=1.0.0,<2.0.0",
 ]
 codespell = ["codespell>=2.2.6,<3.0.0"]
 lint = ["ruff>=0.11.10,<0.12.0"]
@@ -54,7 +54,7 @@ typing = [
     "mypy>=1.15.0,<2.0.0",
     "ty>=0.0.1a3,<0.1.0",
 ]
-docs = ["langchain-ollama>=0.3.3,<0.4.0"]
+docs = ["langchain-ollama>=1.0.0,<2.0.0"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "T201"]
@@ -68,3 +68,6 @@ markers = [
     "compile: mark placeholder test used to compile integration tests without running them",
 ]
 asyncio_mode = "auto"
+
+[tool.hatch.metadata]
+allow-direct-references = true

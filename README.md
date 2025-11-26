@@ -43,11 +43,22 @@ This package contains the LangChain integration with SurrealDB
 
 ## Installation
 
+> **Python 3.10+ is required.**
+
 ```bash
 # -- Using pip
 pip install -U langchain-surrealdb surrealdb
 # -- Using uv (preferred for contributors)
 uv add langchain-surrealdb surrealdb
+```
+
+### Graph QA extra
+
+Experimental graph QA helpers depend on `langchain-classic`. Install the extra if you
+plan to use them:
+
+```bash
+pip install -U "langchain-surrealdb[graph-qa]"
 ```
 
 ## Local development with uv
