@@ -10,8 +10,8 @@ try:
     from langchain_classic.chains.llm import LLMChain
 except ImportError as exc:
     raise ImportError(
-        "SurrealDB graph QA requires langchain-classic. "
-        "Install with `pip install langchain-surrealdb[graph-qa]`."
+        "SurrealDB graph QA requires langchain-classic."
+        + "Install with `pip install langchain-surrealdb[graph-qa]`."
     ) from exc
 from pydantic import Field
 
@@ -81,12 +81,12 @@ class SurrealDBGraphQAChain(Chain):
     @classmethod
     def from_llm(
         cls,
-        llm: BaseLanguageModel,
+        llm: BaseLanguageModel[Any],
         *,
         graph: SurrealDBGraph,
-        qa_prompt: BasePromptTemplate = SURQL_QA_PROMPT,
-        surql_generation_prompt: BasePromptTemplate = SURQL_GENERATION_PROMPT,
-        surql_fix_prompt: BasePromptTemplate = SURQL_FIX_PROMPT,
+        qa_prompt: BasePromptTemplate[Any] = SURQL_QA_PROMPT,
+        surql_generation_prompt: BasePromptTemplate[Any] = SURQL_GENERATION_PROMPT,
+        surql_fix_prompt: BasePromptTemplate[Any] = SURQL_FIX_PROMPT,
         **kwargs: Any,
     ) -> "SurrealDBGraphQAChain":
         """Initialize from LLM."""

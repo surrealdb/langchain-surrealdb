@@ -55,6 +55,12 @@ typing = [
     "ty>=0.0.1a3,<0.1.0",
 ]
 docs = ["langchain-ollama>=1.0.0,<2.0.0"]
+experimental = [
+    "langchain-community>=0.4.1",
+]
+examples = [
+    "click>=8.3.1",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "T201"]

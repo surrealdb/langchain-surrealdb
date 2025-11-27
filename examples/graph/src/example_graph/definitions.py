@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from typing_extensions import cast
+
 
 @dataclass
 class Symptom:
@@ -11,17 +13,17 @@ class Symptom:
 
 
 class Symptoms:
-    def __init__(self, category: str, symptoms: list[dict]):
-        self.category = category
-        self.symptoms = [
+    def __init__(self, category: str, symptoms: list[dict[str, str | list[str]]]):
+        self.category: str = category
+        self.symptoms: list[Symptom] = [
             Symptom(
-                name=x.get("name", ""),
-                description=x.get("description", ""),
+                name=str(x.get("name", "")),
+                description=str(x.get("description", "")),
                 category=category,
                 medical_practice=[
-                    y.strip() for y in x.get("medical_practice", "").split(",")
+                    y.strip() for y in str(x.get("medical_practice", "")).split(",")
                 ],
-                possible_treatments=x.get("possible_treatments", []),
+                possible_treatments=cast(list[str], x.get("possible_treatments", [])),
             )
             for x in symptoms
         ]
