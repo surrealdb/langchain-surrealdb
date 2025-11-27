@@ -181,7 +181,7 @@ class SurrealDBGraphQAChain(Chain):
         else:
             context = []
 
-        final_result: Union[List[Dict[str, Any]], str]
+        final_result: list[dict[str, Any]] | str
         if self.skip_qa_prompt:
             final_result = context
         else:
@@ -201,7 +201,7 @@ class SurrealDBGraphQAChain(Chain):
                 )
             ]
 
-        chain_result: Dict[str, Any] = {self._output_key: final_result}
+        chain_result: dict[str, Any] = {self._output_key: final_result}
         if self.return_intermediate_steps:
             chain_result[INTERMEDIATE_STEPS_KEY] = intermediate_steps
 

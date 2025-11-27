@@ -39,6 +39,7 @@ class SurrealDBGraph(GraphStore):
         table_prefix: str = "graph_",
         relation_prefix: str = "relation_",
     ) -> None:
+        super().__init__()
         self.connection = connection
         self.table_prefix = table_prefix
         self.relation_prefix = relation_prefix
@@ -87,16 +88,16 @@ class SurrealDBGraph(GraphStore):
         if ids is not None:
             for table, _id in ids:
                 if _id is None:
-                    self.connection.delete(table)
+                    _ = self.connection.delete(table)
                 else:
-                    self.connection.delete(RecordID(table, _id))
+                    _ = self.connection.delete(RecordID(table, _id))
         else:
             # find all tables
             info = self.connection.query("INFO FOR DB", {})
             if isinstance(info, dict):
                 for table in info.get("tables", {}).keys():
-                    self.connection.delete(table)
-            self.connection.delete(self.table_prefix + "source")
+                    _ = self.connection.delete(table)
+            _ = self.connection.delete(self.table_prefix + "source")
 
     def add_graph_documents(
         self, graph_documents: list[GraphDocument], include_source: bool = False
@@ -118,7 +119,7 @@ class SurrealDBGraph(GraphStore):
                 source = source["result"][0]["result"][0]
 
             for node in doc.nodes:
-                self._query(
+                _ = self._query(
                     CREATE_NODE_QUERY,
                     {
                         "record_id": self._build_node_recordid(node),
@@ -126,7 +127,7 @@ class SurrealDBGraph(GraphStore):
                     },
                 )
                 if include_source and source is not None:
-                    self._query(
+                    _ = self._query(
                         RELATE_QUERY,
                         {
                             "in": source["id"],
@@ -137,7 +138,7 @@ class SurrealDBGraph(GraphStore):
                     )
 
             for rel in doc.relationships:
-                self._query(
+                _ = self._query(
                     RELATE_QUERY,
                     {
                         "in": self._build_node_recordid(rel.source),

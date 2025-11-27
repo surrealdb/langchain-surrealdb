@@ -20,6 +20,9 @@ from surrealdb import (
     RecordID,
     Value,
 )
+from typing_extensions import override
+
+from langchain_surrealdb.utils import extract_id
 
 SurrealConnection = BlockingWsSurrealConnection | BlockingHttpSurrealConnection
 SurrealAsyncConnection = AsyncWsSurrealConnection | AsyncHttpSurrealConnection
@@ -72,11 +75,11 @@ class SurrealDocument:
     text: str
     vector: list[float]
     similarity: float | None = None
-    metadata: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Value] = field(default_factory=dict)
 
     def into(self) -> Document:
         return Document(
-            id=self.id.id,
+            id=str(self.id.id),  # pyright: ignore[reportAny]
             page_content=self.text,
             metadata=self.metadata,
         )
@@ -228,16 +231,16 @@ class SurrealDBVectorStore(VectorStore):
         Args:
             embedding: embedding function to use.
         """
-        self.embedding = embedding
-        self.table = table
-        self.index_name = index_name
-        self.connection = connection
-        self.async_connection = async_connection
-        self._async_initializer = async_initializer
-        self._async_initialized = False
+        self.embedding: Embeddings = embedding
+        self.table: str = table
+        self.index_name: str = index_name
+        self.connection: SurrealConnection = connection
+        self.async_connection: SurrealAsyncConnection | None = async_connection
+        self._async_initializer: AsyncConnectionInitializer | None = async_initializer
+        self._async_initialized: bool = False
         self._async_initializer_lock: asyncio.Lock | None = None
         if embedding_dimension is not None:
-            self.embedding_dimension = embedding_dimension
+            self.embedding_dimension: int = embedding_dimension
         else:
             self.embedding_dimension = len(self.embedding.embed_query("foo"))
         self._ensure_index()
@@ -271,7 +274,7 @@ class SurrealDBVectorStore(VectorStore):
         if not isinstance(results, list):
             raise ValueError("Invalid query results, expected a list")
         results_cast: list[dict[str, Value]] = cast(list[dict[str, Value]], results)
-        docs = {}
+        docs: dict[str, Document] = {}
         for x in results_cast:
             id = x.get("id")
             if not isinstance(id, RecordID):
@@ -287,13 +290,13 @@ class SurrealDBVectorStore(VectorStore):
                 metadata=cast(dict[str, Value], metadata),
                 similarity=cast(float, similarity),
             ).into()
-            docs[doc.id] = doc
+            if doc.id is not None:
+                docs[doc.id] = doc
         # sort docs in the same order as the passed in IDs
         result: list[Document] = []
         for key in ids:
-            d = docs.get(str(key))
-            if d is not None:
-                result.append(d)
+            d = docs[key]
+            result.append(d)
         return result
 
     @staticmethod
@@ -326,18 +329,22 @@ class SurrealDBVectorStore(VectorStore):
         return parsed
 
     @classmethod
+    @override
     def from_texts(
         cls: type[SurrealDBVectorStore],
         texts: list[str],
         embedding: Embeddings,
         metadatas: list[dict[str, Any]] | None = None,
         *,
-        connection: SurrealConnection,
+        ids: list[str] | None = None,
+        connection: SurrealConnection | None = None,
         table: str = "documents",
         index_name: str = "documents_vector_index",
         embedding_dimension: int | None = None,
         **kwargs: Any,
     ) -> SurrealDBVectorStore:
+        if connection is None:
+            raise ValueError("Connection is required")
         store = cls(
             embedding=embedding,
             connection=connection,
@@ -345,23 +352,27 @@ class SurrealDBVectorStore(VectorStore):
             index_name=index_name,
             embedding_dimension=embedding_dimension,
         )
-        _ = store.add_texts(texts=texts, metadatas=metadatas, **kwargs)
+        _ = store.add_texts(texts=texts, metadatas=metadatas, ids=ids, **kwargs)  # pyright: ignore[reportUnknownMemberType]
         return store
 
     @classmethod
+    @override
     async def afrom_texts(
         cls: type[SurrealDBVectorStore],
         texts: list[str],
         embedding: Embeddings,
         metadatas: list[dict[str, Any]] | None = None,
         *,
-        connection: SurrealConnection,
+        ids: list[str] | None = None,
+        connection: SurrealConnection | None = None,
         async_connection: SurrealAsyncConnection | None = None,
         table: str = "documents",
         index_name: str = "documents_vector_index",
         embedding_dimension: int | None = None,
         **kwargs: Any,
     ) -> SurrealDBVectorStore:
+        if connection is None:
+            raise ValueError("Connection is required")
         store = cls(
             embedding=embedding,
             connection=connection,
@@ -370,7 +381,7 @@ class SurrealDBVectorStore(VectorStore):
             index_name=index_name,
             embedding_dimension=embedding_dimension,
         )
-        _ = await store.aadd_texts(texts=texts, metadatas=metadatas, **kwargs)
+        _ = await store.aadd_texts(texts=texts, metadatas=metadatas, **kwargs)  # pyright: ignore[reportUnknownMemberType]
         return store
 
     @property
@@ -410,9 +421,9 @@ class SurrealDBVectorStore(VectorStore):
         for doc, vector in zip(documents, vectors):
             doc_id = next(id_iterator)
             doc_data: dict[str, Value] = {
-                "vector": vector,
+                "vector": cast(list[Value], vector),
                 "text": doc.page_content,
-                "metadata": doc.metadata,
+                "metadata": doc.metadata,  # pyright: ignore[reportUnknownMemberType]
             }
             if doc_id is not None:
                 record_id = RecordID(self.table, doc_id)
@@ -421,11 +432,12 @@ class SurrealDBVectorStore(VectorStore):
                 inserted = self.connection.insert(self.table, doc_data)
             if isinstance(inserted, list):
                 for record in inserted:
-                    ids_.append(record["id"].id)
+                    ids_.append(extract_id(record))
             elif isinstance(inserted, dict):
-                ids_.append(inserted["id"].id)
+                ids_.append(extract_id(inserted))
         return ids_
 
+    @override
     async def aadd_documents(
         self, documents: list[Document], ids: list[str] | None = None, **kwargs: Any
     ) -> list[str]:
@@ -433,13 +445,13 @@ class SurrealDBVectorStore(VectorStore):
             raise ValueError("No async connection provided")
         await self._ensure_async_connection_ready()
         vectors, id_iterator = self._prepare_documents(documents, ids)
-        ids_ = []
+        ids_: list[str] = []
         for doc, vector in zip(documents, vectors):
             doc_id = next(id_iterator)
             doc_data: dict[str, Value] = {
-                "vector": vector,
+                "vector": cast(list[Value], vector),
                 "text": doc.page_content,
-                "metadata": doc.metadata,
+                "metadata": doc.metadata,  # pyright: ignore[reportUnknownMemberType]
             }
             if doc_id is not None:
                 record_id = RecordID(self.table, doc_id)
@@ -448,11 +460,12 @@ class SurrealDBVectorStore(VectorStore):
                 inserted = await self.async_connection.insert(self.table, doc_data)
             if isinstance(inserted, list):
                 for record in inserted:
-                    ids_.append(record["id"].id)
+                    ids_.append(extract_id(record))
             elif isinstance(inserted, dict):
-                ids_.append(inserted["id"].id)
+                ids_.append(extract_id(inserted))
         return ids_
 
+    @override
     def delete(self, ids: list[str] | None = None, **kwargs: Any) -> None:
         if ids is not None:
             for _id in ids:
@@ -460,6 +473,7 @@ class SurrealDBVectorStore(VectorStore):
         else:
             _ = self.connection.delete(self.table)
 
+    @override
     async def adelete(self, ids: list[str] | None = None, **kwargs: Any) -> None:
         if self.async_connection is None:
             raise ValueError("No async connection provided")
@@ -512,7 +526,7 @@ class SurrealDBVectorStore(VectorStore):
     ) -> tuple[str, QueryArgs]:
         args: QueryArgs = {
             "table": self.table,
-            "vector": vector,
+            "vector": cast(list[Value], vector),
             "k": k,
             "score_threshold": score_threshold,
         }
