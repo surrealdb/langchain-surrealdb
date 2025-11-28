@@ -1,9 +1,10 @@
 from datetime import datetime
+from typing import Any
 
 from langchain_core.messages import BaseMessage
 
 
-def normalize_content(msg_content: str | list[str | dict]) -> str:
+def normalize_content(msg_content: str | list[str | dict[str, Any]]) -> str:
     if isinstance(msg_content, str):
         return msg_content
     else:

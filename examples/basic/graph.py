@@ -26,7 +26,8 @@ doc1 = Document(
     metadata={"key": "sdb"},
 )
 doc2 = Document(
-    page_content="Surrealism is an artistic and cultural movement that emerged in the early 20th century",
+    page_content="Surrealism is an artistic and cultural movement that "
+    + "emerged in the early 20th century",
     metadata={"key": "surrealism"},
 )
 vector_store.add_documents(documents=[doc1, doc2], ids=["1", "2"])

@@ -9,10 +9,10 @@ from langchain_community.graphs.graph_document import GraphDocument, Node, Relat
 from langchain_core.documents import Document
 from nanoid import generate
 
-from graphrag_travel_group_chat.chat_loaders.instagram import InstagramChatLoader
 from langchain_surrealdb.experimental.surrealdb_graph import SurrealDBGraph
 from langchain_surrealdb.vectorstores import SurrealDBVectorStore
 
+from .chat_loaders.instagram import InstagramChatLoader
 from .definitions import Chunk
 from .llm import infer_keywords
 from .utils import format_time, get_message_timestamp_and_sender, normalize_content

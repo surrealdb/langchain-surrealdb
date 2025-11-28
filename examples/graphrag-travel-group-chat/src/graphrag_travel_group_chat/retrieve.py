@@ -1,4 +1,5 @@
 from textwrap import dedent
+from typing_extensions import cast
 
 import click
 from langchain_core.documents import Document
@@ -6,6 +7,7 @@ from langchain_ollama import ChatOllama
 from surrealdb import (
     BlockingHttpSurrealConnection,
     BlockingWsSurrealConnection,
+    Value,
 )
 
 from langchain_surrealdb.experimental.graph_qa.chain import SurrealDBGraphQAChain
@@ -98,9 +100,10 @@ def graph_query(
         )
         GROUP BY id
     """)
-    result = conn.query(query, {"kws": similar_keywords})
-    if isinstance(result, list):
-        result = [x.get("content", []) for x in result]
-    else:
-        result = []
+    query_result = conn.query(query, {"kws": cast(Value, similar_keywords)})
+    result: list[str] = []
+    if isinstance(query_result, list):
+        for x in query_result:
+            if isinstance(x, dict) and "content" in x:
+                result.append(str(x["content"]))
     return result
