@@ -1,10 +1,26 @@
-__pycache__
-.mypy_cache/
-.DS_Store
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
 dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# DB
+demo.db/
+history.txt
+
+# OS
+.DS_Store
 
 # IDE
 .idea/
 
+# DB
 database/
 
+# Env
+.env

@@ -1246,9 +1246,9 @@ typing = [
 
 [package.metadata]
 requires-dist = [
-    { name = "langchain-classic", marker = "extra == 'experimental'", specifier = ">=1.0.0,<2.0.0" },
-    { name = "langchain-community", marker = "extra == 'experimental'", specifier = ">=0.4.1" },
-    { name = "langchain-core", specifier = ">=1.0.0,<2.0.0" },
+    { name = "langchain-classic", marker = "extra == 'experimental'", specifier = "~=1.0.0" },
+    { name = "langchain-community", marker = "extra == 'experimental'", specifier = "~=0.4.1" },
+    { name = "langchain-core", specifier = "~=1.1.0" },
     { name = "numpy", marker = "python_full_version < '3.13'", specifier = ">=1.26.0" },
     { name = "numpy", marker = "python_full_version >= '3.13'", specifier = ">=2.1.0" },
     { name = "surrealdb", git = "https://github.com/surrealdb/surrealdb.py.git" },
@@ -1259,12 +1259,12 @@ provides-extras = ["experimental"]
 codespell = [{ name = "codespell", specifier = ">=2.2.6,<3.0.0" }]
 dev = [{ name = "notebook", specifier = ">=7.4.3,<8.0.0" }]
 examples = [
-    { name = "click", specifier = ">=8.3.1" },
-    { name = "langchain-ollama", specifier = ">=1.0.0,<2.0.0" },
+    { name = "click", specifier = "~=8.3.1" },
+    { name = "langchain-ollama", specifier = "~=1.0.0" },
 ]
 experimental = [
-    { name = "langchain-classic", specifier = ">=1.0.0,<2.0.0" },
-    { name = "langchain-community", specifier = ">=0.4.1" },
+    { name = "langchain-classic", specifier = "~=1.0.0" },
+    { name = "langchain-community", specifier = "~=0.4.1" },
 ]
 lint = [{ name = "ruff", specifier = "~=0.14.6" }]
 test = [
