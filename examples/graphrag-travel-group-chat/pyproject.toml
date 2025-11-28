@@ -17,11 +17,4 @@ dependencies = [
 cli = "graphrag_travel_group_chat.main:cli"
 
 [tool.uv.sources]
-langchain-surrealdb = { path = "../../", editable = true }
-
-[dependency-groups]
-dev = ["ruff>=0.12.4", "ty>=0.0.1a15"]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+langchain-surrealdb = { workspace = true }
