@@ -28,12 +28,14 @@ def chat(verbose: bool) -> None:
     chat_model = ChatOllama(model="llama3.2", temperature=0.8)
 
     def query_logger(q: str, results: int) -> None:
-        conn.insert("generated_query", {"query": q, "results": results})
+        _ = conn.insert("generated_query", {"query": q, "results": results})
 
     try:
         while True:
-            query = click.prompt(
-                click.style("\nWhat are your symptoms?", fg="green"), type=str
+            query = str(
+                click.prompt(  # pyright: ignore[reportAny]
+                    click.style("\nWhat are your symptoms?", fg="green"), type=str
+                )
             )
             if query == "exit":
                 break

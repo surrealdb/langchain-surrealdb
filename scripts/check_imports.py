@@ -7,7 +7,7 @@ if __name__ == "__main__":
     has_failure = False
     for file in files:
         try:
-            SourceFileLoader("x", file).load_module()
+            _ = SourceFileLoader("x", file).load_module()
         except Exception:
             has_failure = True
             print(file)  # noqa: T201

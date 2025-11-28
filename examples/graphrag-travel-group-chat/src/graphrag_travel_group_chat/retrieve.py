@@ -1,5 +1,4 @@
 from textwrap import dedent
-from typing_extensions import cast
 
 import click
 from langchain_core.documents import Document
@@ -9,6 +8,7 @@ from surrealdb import (
     BlockingWsSurrealConnection,
     Value,
 )
+from typing_extensions import cast
 
 from langchain_surrealdb.experimental.graph_qa.chain import SurrealDBGraphQAChain
 from langchain_surrealdb.experimental.surrealdb_graph import SurrealDBGraph
@@ -56,7 +56,7 @@ def graph_qa(
     verbose: bool,
 ) -> str:
     def query_logger(q: str, results: int) -> None:
-        graph_store.connection.insert(
+        _ = graph_store.connection.insert(
             "generated_query", {"query": q, "results": results}
         )
 
@@ -82,8 +82,8 @@ def graph_qa(
             """)
         }
     )
-    graph_answer = response["result"][0]["text"]
-    return graph_answer
+    graph_answer = response["result"][0]["text"]  # pyright: ignore[reportAny]
+    return str(graph_answer)  # pyright: ignore[reportAny]
 
 
 def graph_query(

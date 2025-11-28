@@ -4,7 +4,7 @@ from typing import Any
 from langchain_core.messages import BaseMessage
 
 
-def normalize_content(msg_content: str | list[str | dict[str, Any]]) -> str:
+def normalize_content(msg_content: str | list[str | dict[str, Any]]) -> str:  # pyright: ignore[reportExplicitAny]
     if isinstance(msg_content, str):
         return msg_content
     else:
@@ -29,13 +29,16 @@ def format_time(dt: datetime) -> str:
 
 
 def get_message_timestamp_and_sender(msg: BaseMessage) -> tuple[datetime, str]:
-    events = msg.additional_kwargs.get("events", [])
-    sender = msg.additional_kwargs.get("sender", "")
+    events = msg.additional_kwargs.get("events", [])  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
+    sender = str(msg.additional_kwargs.get("sender", ""))  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType]
     if events:
-        tmp = events[0].get("message_time")
+        if isinstance(events, list) and isinstance(events[0], dict):
+            tmp = events[0]["message_time"]  # pyright: ignore[reportUnknownVariableType]
+        else:
+            tmp = None
         if isinstance(tmp, datetime):
             return tmp, sender
         else:
-            return parse_time(tmp), sender
+            return parse_time(str(tmp)), sender  # pyright: ignore[reportUnknownArgumentType]
     else:
         return datetime.now(), sender

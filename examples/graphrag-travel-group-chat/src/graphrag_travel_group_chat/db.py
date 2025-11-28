@@ -28,7 +28,7 @@ def init_stores(
     BlockingWsSurrealConnection | BlockingHttpSurrealConnection,
 ]:
     conn = Surreal(url)
-    conn.signin({"username": user, "password": password})
+    _ = conn.signin({"username": user, "password": password})
     conn.use(ns, db)
     vector_store_ = SurrealDBVectorStore(OllamaEmbeddings(model="all-minilm:22m"), conn)
     vector_store_keywords_ = SurrealDBVectorStore(

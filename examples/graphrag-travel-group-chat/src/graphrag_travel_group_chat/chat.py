@@ -26,14 +26,14 @@ def chat(
     assert isinstance(res, list)
     all_keywords: list[str] = [k for k in res if isinstance(k, str)]
 
-    user_name = click.prompt(
+    user_name: str = click.prompt(  # pyright: ignore[reportAny]
         click.style("What's your name", fg="green"),
         type=str,
     )
 
     try:
         while True:
-            query = click.prompt(
+            query: str = click.prompt(  # pyright: ignore[reportAny]
                 click.style("\nAsk something about the group chat", fg="green"),
                 type=str,
             )

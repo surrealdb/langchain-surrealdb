@@ -26,7 +26,7 @@ def init_stores(
     BlockingWsSurrealConnection | BlockingHttpSurrealConnection,
 ]:
     conn = Surreal(url)
-    conn.signin({"username": user, "password": password})
+    _ = conn.signin({"username": user, "password": password})
     conn.use(ns, db)
     vector_store_ = SurrealDBVectorStore(OllamaEmbeddings(model="llama3.2"), conn)
     graph_store_ = SurrealDBGraph(conn)
@@ -67,8 +67,8 @@ def ask(q: str, chain: SurrealDBGraphQAChain) -> None:
     print(click.style("Loading...", fg="magenta"), end="", flush=True)  # noqa: T201
     response = chain.invoke({"query": q})
     print(click.style("\rAnswer: ", fg="blue"), end="")  # noqa: T201
-    print(response["result"][0]["text"])  # noqa: T201
+    print(response["result"][0]["text"])  # noqa: T201  # pyright: ignore[reportAny]
 
 
 def get_document_names(docs: list[Document]) -> str:
-    return ", ".join([doc.metadata["name"] for doc in docs])
+    return ", ".join([doc.metadata["name"] for doc in docs])  # pyright: ignore[reportUnknownArgumentType, reportUnknownMemberType]

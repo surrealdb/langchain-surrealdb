@@ -3,12 +3,13 @@ import logging
 import os
 import re
 import zipfile
+from collections.abc import Iterator
 from datetime import datetime
-from typing import Iterator
 
 from langchain_core.chat_loaders import BaseChatLoader
 from langchain_core.chat_sessions import ChatSession
 from langchain_core.messages import HumanMessage
+from typing_extensions import override
 
 logger = logging.getLogger(__name__)
 
@@ -23,9 +24,9 @@ class InstagramChatLoader(BaseChatLoader):
             path (str): Path to the exported Instagram chat
                 zip directory, folder, or file.
         """
-        self.path = path
+        self.path: str = path
         ignore_lines = [".* sent an attachment.", "Liked a message"]
-        self._ignore_lines = re.compile(
+        self._ignore_lines: re.Pattern[str] = re.compile(
             r"(" + "|".join([line for line in ignore_lines]) + r")",
             flags=re.IGNORECASE,
         )
@@ -40,27 +41,31 @@ class InstagramChatLoader(BaseChatLoader):
             ChatSession: The loaded chat session.
         """
         with open(file_path, "r", encoding="utf-8") as file:
-            json_parsed = json.load(file)
+            json_parsed = json.load(file)  # pyright: ignore[reportAny]
 
-        results = []
-        messages = json_parsed.get("messages", [])
+        results: list[HumanMessage] = []
+        messages = json_parsed.get("messages", [])  # pyright: ignore[reportAny]
+        assert isinstance(messages, list)
         # sort by timestamp
-        messages.sort(key=lambda x: x.get("timestamp_ms", 0))
-        for message in messages:
-            sender = message.get("sender_name")
-            timestamp = datetime.fromtimestamp(message.get("timestamp_ms", 0) / 1000)
-            text = message.get("content", "")
-            if not self._ignore_lines.match(text.strip()):
-                results.append(
-                    HumanMessage(
-                        role=sender,
-                        content=text,
-                        additional_kwargs={
-                            "sender": sender,
-                            "events": [{"message_time": timestamp}],
-                        },
-                    )
+        messages.sort(key=lambda x: x.get("timestamp_ms", 0))  # pyright: ignore[reportUnknownLambdaType, reportUnknownMemberType]
+        for message in messages:  # pyright: ignore[reportUnknownVariableType]
+            if isinstance(message, dict):
+                sender = message.get("sender_name")  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
+                timestamp = datetime.fromtimestamp(
+                    message.get("timestamp_ms", 0) / 1000  # pyright: ignore[reportUnknownArgumentType, reportUnknownMemberType]
                 )
+                text = str(message.get("content", ""))  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType]
+                if not self._ignore_lines.match(text.strip()):
+                    results.append(
+                        HumanMessage(
+                            role=sender,
+                            content=text,
+                            additional_kwargs={
+                                "sender": sender,
+                                "events": [{"message_time": timestamp}],
+                            },
+                        )
+                    )
         return ChatSession(messages=results)
 
     @staticmethod
@@ -86,6 +91,7 @@ class InstagramChatLoader(BaseChatLoader):
                     if file == "message_1.json":
                         yield zip_file.extract(file)
 
+    @override
     def lazy_load(self) -> Iterator[ChatSession]:
         """Lazy load the messages from the chat file and yield
         them as chat sessions.

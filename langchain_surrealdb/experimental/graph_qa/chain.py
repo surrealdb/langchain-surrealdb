@@ -4,6 +4,7 @@ from typing import Any, Callable
 from langchain_core.callbacks import CallbackManagerForChainRun
 from langchain_core.language_models import BaseLanguageModel
 from langchain_core.prompts import BasePromptTemplate
+from typing_extensions import override
 
 try:
     from langchain_classic.chains.base import Chain
@@ -64,16 +65,18 @@ class SurrealDBGraphQAChain(Chain):
     _input_key: str = "query"
     _output_key: str = "result"
 
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self, **kwargs: Any) -> None:  # pyright: ignore[reportAny, reportExplicitAny]
         """Initialize the chain."""
-        super().__init__(**kwargs)
+        super().__init__(**kwargs)  # pyright: ignore[reportAny]
 
     @property
+    @override
     def input_keys(self) -> list[str]:
         """Keys expected to be in the chain input."""
         return [self._input_key]
 
     @property
+    @override
     def output_keys(self) -> list[str]:
         """Keys expected to be in the chain output."""
         return [self._output_key]
@@ -81,13 +84,13 @@ class SurrealDBGraphQAChain(Chain):
     @classmethod
     def from_llm(
         cls,
-        llm: BaseLanguageModel[Any],
+        llm: BaseLanguageModel[Any],  # pyright: ignore[reportExplicitAny]
         *,
         graph: SurrealDBGraph,
-        qa_prompt: BasePromptTemplate[Any] = SURQL_QA_PROMPT,
-        surql_generation_prompt: BasePromptTemplate[Any] = SURQL_GENERATION_PROMPT,
-        surql_fix_prompt: BasePromptTemplate[Any] = SURQL_FIX_PROMPT,
-        **kwargs: Any,
+        qa_prompt: BasePromptTemplate[Any] = SURQL_QA_PROMPT,  # pyright: ignore[reportExplicitAny]
+        surql_generation_prompt: BasePromptTemplate[Any] = SURQL_GENERATION_PROMPT,  # pyright: ignore[reportExplicitAny]
+        surql_fix_prompt: BasePromptTemplate[Any] = SURQL_FIX_PROMPT,  # pyright: ignore[reportExplicitAny]
+        **kwargs: Any,  # pyright: ignore[reportExplicitAny, reportAny]
     ) -> "SurrealDBGraphQAChain":
         """Initialize from LLM."""
         qa_chain = LLMChain(llm=llm, prompt=qa_prompt)
@@ -102,14 +105,15 @@ class SurrealDBGraphQAChain(Chain):
             **kwargs,
         )
 
+    @override
     def _call(
         self,
-        inputs: dict[str, Any],
+        inputs: dict[str, Any],  # pyright: ignore[reportExplicitAny]
         run_manager: CallbackManagerForChainRun | None = None,
-    ) -> dict[str, Any]:
+    ) -> dict[str, Any]:  # pyright: ignore[reportExplicitAny]
         _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
         callbacks = _run_manager.get_child()
-        question = inputs[self._input_key]
+        question = inputs[self._input_key]  # pyright: ignore[reportAny]
         graph_schema = self.graph.get_schema
         args = {
             "user_input": question,
@@ -119,10 +123,10 @@ class SurrealDBGraphQAChain(Chain):
         args.update(inputs)
         _run_manager.on_text(f"Query: {question}", end="\n", verbose=self.verbose)
 
-        intermediate_steps: list[dict[str, Any]] = []
+        intermediate_steps: list[dict[str, str]] = []
 
         result = self.surql_generation_chain.invoke(args, callbacks=callbacks)
-        generated_surql = extract_surql(result["text"])
+        generated_surql = extract_surql(result["text"])  # pyright: ignore[reportAny]
 
         _run_manager.on_text("Generated surql:", end="\n", verbose=self.verbose)
         _run_manager.on_text(
@@ -135,7 +139,7 @@ class SurrealDBGraphQAChain(Chain):
             surql: str,
             retry_count: int = 0,
             max_retries: int = 2,
-        ) -> list[dict[str, Any]]:
+        ) -> list[dict[str, Any]]:  # pyright: ignore[reportExplicitAny]
             if retry_count > max_retries:
                 raise Exception(f"Failed to fix query in under {max_retries} retries.")
             try:
@@ -149,7 +153,7 @@ class SurrealDBGraphQAChain(Chain):
                     "surql_error": str(_e),
                 }
                 _result = self.surql_fix_chain.invoke(_args, callbacks=callbacks)
-                _generated_surql = extract_surql(_result["text"])
+                _generated_surql = extract_surql(_result["text"])  # pyright: ignore[reportAny]
                 if _generated_surql == surql:
                     raise Exception(f"Failed to fix query. Surql: {_generated_surql}")
                 _run_manager.on_text('"Fixed" surql:', end="\n", verbose=self.verbose)
@@ -181,7 +185,7 @@ class SurrealDBGraphQAChain(Chain):
         else:
             context = []
 
-        final_result: list[dict[str, Any]] | str
+        final_result: list[dict[str, Any]] | str  # pyright: ignore[reportExplicitAny]
         if self.skip_qa_prompt:
             final_result = context
         else:
@@ -201,13 +205,13 @@ class SurrealDBGraphQAChain(Chain):
                 )
             ]
 
-        chain_result: dict[str, Any] = {self._output_key: final_result}
+        chain_result: dict[str, list[dict[str, Any]]] = {self._output_key: final_result}  # pyright: ignore[reportExplicitAny]
         if self.return_intermediate_steps:
             chain_result[INTERMEDIATE_STEPS_KEY] = intermediate_steps
 
         _run_manager.on_text("Answer:", end="\n", verbose=self.verbose)
         _run_manager.on_text(
-            chain_result[self._output_key][0]["text"],
+            chain_result[self._output_key][0]["text"],  # pyright: ignore[reportAny]
             color="green",
             end="\n",
             verbose=self.verbose,

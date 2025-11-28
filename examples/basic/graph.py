@@ -5,13 +5,13 @@ from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import OllamaEmbeddings
 from langchain_ollama.llms import OllamaLLM
-from surrealdb import Surreal
+from surrealdb import Surreal, Value
 
 from langchain_surrealdb.experimental.surrealdb_graph import SurrealDBGraph
 from langchain_surrealdb.vectorstores import SurrealDBVectorStore
 
 conn = Surreal("ws://localhost:8000/rpc")
-conn.signin({"username": "root", "password": "root"})
+_ = conn.signin({"username": "root", "password": "root"})
 conn.use("langchain", "demo")
 vector_store = SurrealDBVectorStore(OllamaEmbeddings(model="all-minilm:22m"), conn)
 graph_store = SurrealDBGraph(conn)
@@ -30,7 +30,7 @@ doc2 = Document(
     + "emerged in the early 20th century",
     metadata={"key": "surrealism"},
 )
-vector_store.add_documents(documents=[doc1, doc2], ids=["1", "2"])
+_ = vector_store.add_documents(documents=[doc1, doc2], ids=["1", "2"])
 
 # ------------------------------------------------------------------------------
 # -- Graph
@@ -85,11 +85,16 @@ for q in queries:
         FROM type::thing("graph_Document", $doc_key)
         FETCH people
         """,
-        {"doc_key": top_match.metadata.get("key")},
+        {"doc_key": top_match.metadata.get("key")},  # pyright: ignore[reportUnknownMemberType]
     )
-    people = [x.get("name") for x in res[0].get("people", [])]
+    people: list[dict[str, Value]] = []
+    if res:
+        tmp = res[0].get("people", [])
+        if isinstance(tmp, list):
+            people = [x for x in tmp if isinstance(x, dict) and "name" in x]
+    people_names = [x.get("name", "") for x in people]
 
-    print(f"\nGraph result: {people}")
+    print(f"\nGraph result: {people_names}")
 
     # Template for the LLM
     template = """
@@ -108,10 +113,10 @@ for q in queries:
     """
 
     prompt = ChatPromptTemplate.from_template(template)
-    chain = prompt | model
+    chain = prompt | model  # pyright: ignore[reportUnknownVariableType]
 
-    answer = chain.invoke(
-        {"context": top_match.page_content, "people": people, "topic": q}
+    answer = chain.invoke(  # pyright: ignore[reportUnknownMemberType]
+        {"context": top_match.page_content, "people": people_names, "topic": q}
     )
     print(f"\nLLM answer:\n===========\n{answer}")
     time.sleep(4)

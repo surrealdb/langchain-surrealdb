@@ -11,7 +11,9 @@ import numpy as np
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.vectorstores import VectorStore
-from langchain_core.vectorstores.utils import maximal_marginal_relevance
+from langchain_core.vectorstores.utils import (
+    maximal_marginal_relevance,  # pyright: ignore[reportUnknownVariableType]
+)
 from surrealdb import (
     AsyncHttpSurrealConnection,
     AsyncWsSurrealConnection,
@@ -334,14 +336,14 @@ class SurrealDBVectorStore(VectorStore):
         cls: type[SurrealDBVectorStore],
         texts: list[str],
         embedding: Embeddings,
-        metadatas: list[dict[str, Any]] | None = None,
+        metadatas: list[dict[str, Any]] | None = None,  # pyright: ignore[reportExplicitAny]
         *,
         ids: list[str] | None = None,
         connection: SurrealConnection | None = None,
         table: str = "documents",
         index_name: str = "documents_vector_index",
         embedding_dimension: int | None = None,
-        **kwargs: Any,
+        **kwargs: Any,  # pyright: ignore[reportExplicitAny, reportAny]
     ) -> SurrealDBVectorStore:
         if connection is None:
             raise ValueError("Connection is required")
@@ -361,7 +363,7 @@ class SurrealDBVectorStore(VectorStore):
         cls: type[SurrealDBVectorStore],
         texts: list[str],
         embedding: Embeddings,
-        metadatas: list[dict[str, Any]] | None = None,
+        metadatas: list[dict[str, Any]] | None = None,  # pyright: ignore[reportExplicitAny]
         *,
         ids: list[str] | None = None,
         connection: SurrealConnection | None = None,
@@ -369,7 +371,7 @@ class SurrealDBVectorStore(VectorStore):
         table: str = "documents",
         index_name: str = "documents_vector_index",
         embedding_dimension: int | None = None,
-        **kwargs: Any,
+        **kwargs: Any,  # pyright: ignore[reportAny, reportExplicitAny]
     ) -> SurrealDBVectorStore:
         if connection is None:
             raise ValueError("Connection is required")
@@ -381,7 +383,7 @@ class SurrealDBVectorStore(VectorStore):
             index_name=index_name,
             embedding_dimension=embedding_dimension,
         )
-        _ = await store.aadd_texts(texts=texts, metadatas=metadatas, **kwargs)  # pyright: ignore[reportUnknownMemberType]
+        _ = await store.aadd_texts(texts=texts, metadatas=metadatas, **kwargs)  # pyright: ignore[reportUnknownMemberType, reportAny]
         return store
 
     @property
@@ -413,7 +415,7 @@ class SurrealDBVectorStore(VectorStore):
         self,
         documents: list[Document],
         ids: list[str] | None = None,
-        **kwargs: Any,
+        **kwargs: Any,  # pyright: ignore[reportAny, reportExplicitAny]
     ) -> list[str]:
         """Add documents to the store."""
         vectors, id_iterator = self._prepare_documents(documents, ids)
@@ -439,7 +441,10 @@ class SurrealDBVectorStore(VectorStore):
 
     @override
     async def aadd_documents(
-        self, documents: list[Document], ids: list[str] | None = None, **kwargs: Any
+        self,
+        documents: list[Document],
+        ids: list[str] | None = None,
+        **kwargs: Any,  # pyright: ignore[reportAny, reportExplicitAny]
     ) -> list[str]:
         if self.async_connection is None:
             raise ValueError("No async connection provided")
@@ -466,7 +471,7 @@ class SurrealDBVectorStore(VectorStore):
         return ids_
 
     @override
-    def delete(self, ids: list[str] | None = None, **kwargs: Any) -> None:
+    def delete(self, ids: list[str] | None = None, **kwargs: Any) -> None:  # pyright: ignore[reportAny, reportExplicitAny]
         if ids is not None:
             for _id in ids:
                 _ = self.connection.delete(RecordID(self.table, _id))
@@ -474,7 +479,7 @@ class SurrealDBVectorStore(VectorStore):
             _ = self.connection.delete(self.table)
 
     @override
-    async def adelete(self, ids: list[str] | None = None, **kwargs: Any) -> None:
+    async def adelete(self, ids: list[str] | None = None, **kwargs: Any) -> None:  # pyright: ignore[reportAny, reportExplicitAny]
         if self.async_connection is None:
             raise ValueError("No async connection provided")
         await self._ensure_async_connection_ready()
@@ -581,7 +586,7 @@ class SurrealDBVectorStore(VectorStore):
         k: int = 4,
         *,
         custom_filter: CustomFilter | None = None,
-        **kwargs: Any,
+        **kwargs: Any,  # pyright: ignore[reportAny, reportExplicitAny]
     ) -> list[Document]:
         vector = self.embedding.embed_query(query)
         return [
@@ -593,36 +598,51 @@ class SurrealDBVectorStore(VectorStore):
 
     @override
     async def asimilarity_search(
-        self, query: str, k: int = 4, **kwargs: Any
+        self,
+        query: str,
+        k: int = 4,
+        **kwargs: Any,  # pyright: ignore[reportAny, reportExplicitAny]
     ) -> list[Document]:
         vector = self.embedding.embed_query(query)
         return [
             doc
             for doc, _, _ in await self._asimilarity_search_with_score_by_vector(
-                vector=vector, k=k, **kwargs
+                vector=vector,
+                k=k,
+                **kwargs,  # pyright: ignore[reportAny]
             )
         ]
 
     @override
     def similarity_search_with_score(
-        self, query: str, k: int = 4, **kwargs: Any
+        self,
+        query: str,
+        k: int = 4,
+        **kwargs: Any,  # pyright: ignore[reportAny, reportExplicitAny]
     ) -> list[tuple[Document, float]]:
         vector = self.embedding.embed_query(query)
         return [
             (doc, similarity)
             for doc, similarity, _ in self._similarity_search_with_score_by_vector(
-                vector=vector, k=k, **kwargs
+                vector=vector,
+                k=k,
+                **kwargs,  # pyright: ignore[reportAny]
             )
         ]
 
     @override
     async def asimilarity_search_with_score(
-        self, query: str, k: int = 4, **kwargs: Any
+        self,
+        query: str,
+        k: int = 4,
+        **kwargs: Any,  # pyright: ignore[reportAny, reportExplicitAny]
     ) -> list[tuple[Document, float]]:
         vector = self.embedding.embed_query(query)
         results: list[tuple[Document, float]] = []
         for doc, similarity, _ in await self._asimilarity_search_with_score_by_vector(
-            vector=vector, k=k, **kwargs
+            vector=vector,
+            k=k,
+            **kwargs,  # pyright: ignore[reportAny]
         ):
             results.append((doc, similarity))
         return results
@@ -631,23 +651,33 @@ class SurrealDBVectorStore(VectorStore):
 
     @override
     def similarity_search_by_vector(
-        self, embedding: list[float], k: int = 4, **kwargs: Any
+        self,
+        embedding: list[float],
+        k: int = 4,
+        **kwargs: Any,  # pyright: ignore[reportAny, reportExplicitAny]
     ) -> list[Document]:
         return [
             doc
             for doc, _, _ in self._similarity_search_with_score_by_vector(
-                vector=embedding, k=k, **kwargs
+                vector=embedding,
+                k=k,
+                **kwargs,  # pyright: ignore[reportAny]
             )
         ]
 
     @override
     async def asimilarity_search_by_vector(
-        self, embedding: list[float], k: int = 4, **kwargs: Any
+        self,
+        embedding: list[float],
+        k: int = 4,
+        **kwargs: Any,  # pyright: ignore[reportExplicitAny, reportAny]
     ) -> list[Document]:
         return [
             doc
             for doc, _, _ in await self._asimilarity_search_with_score_by_vector(
-                vector=embedding, k=k, **kwargs
+                vector=embedding,
+                k=k,
+                **kwargs,  # pyright: ignore[reportAny]
             )
         ]
 
@@ -661,7 +691,7 @@ class SurrealDBVectorStore(VectorStore):
         *,
         custom_filter: CustomFilter | None = None,
         score_threshold: float = -1.0,
-        **kwargs: Any,
+        **kwargs: Any,  # pyright: ignore[reportAny, reportExplicitAny]
     ) -> list[Document]:
         vector = self.embedding.embed_query(query)
         docs = self.max_marginal_relevance_search_by_vector(
@@ -684,7 +714,7 @@ class SurrealDBVectorStore(VectorStore):
         lambda_mult: float = 0.5,
         *,
         custom_filter: CustomFilter | None = None,
-        **kwargs: Any,
+        **kwargs: Any,  # pyright: ignore[reportExplicitAny, reportAny]
     ) -> list[Document]:
         vector = self.embedding.embed_query(query)
         docs = await self.amax_marginal_relevance_search_by_vector(
@@ -737,7 +767,7 @@ class SurrealDBVectorStore(VectorStore):
         *,
         custom_filter: CustomFilter | None = None,
         score_threshold: float = -1.0,
-        **kwargs: Any,
+        **kwargs: Any,  # pyright: ignore[reportAny, reportExplicitAny]
     ) -> list[Document]:
         result = self._similarity_search_by_vector_with_score(
             embedding,
@@ -756,9 +786,12 @@ class SurrealDBVectorStore(VectorStore):
         lambda_mult: float = 0.5,
         *,
         custom_filter: CustomFilter | None = None,
-        **kwargs: Any,
+        **kwargs: Any,  # pyright: ignore[reportAny, reportExplicitAny]
     ) -> list[Document]:
         result = await self._asimilarity_search_with_score_by_vector(
-            embedding, fetch_k, custom_filter=custom_filter, **kwargs
+            embedding,
+            fetch_k,
+            custom_filter=custom_filter,
+            **kwargs,  # pyright: ignore[reportAny]
         )
         return self._filter_documents_from_result(result, k, lambda_mult)

@@ -42,17 +42,15 @@ def ingest(
             loader = WhatsAppChatLoader(path=file_path)
         case ChatProvider.INSTAGRAM:
             loader = InstagramChatLoader(path=file_path)
-        case _:
-            raise ValueError(f"Unsupported provider: {provider}")
     raw_messages = loader.lazy_load()
 
     # -- Create chunks based on time gaps
     chunks: list[Chunk] = []
     curr_chunk: list[str] = []
-    chunk_senders = set()
+    chunk_senders: set[str] = set()
     last_time = None
     for cs in raw_messages:
-        for message in cs.get("messages", []):
+        for message in cs.get("messages", []):  # pyright: ignore[reportUnknownMemberType]
             timestamp, sender = get_message_timestamp_and_sender(message)
             if last_time is None:
                 last_time = timestamp
@@ -72,7 +70,7 @@ def ingest(
                         f"[{timestamp}] "
                         + sender
                         + ": "
-                        + normalize_content(message.content)
+                        + normalize_content(message.content)  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType]
                     ]
                 )
             )
@@ -114,34 +112,34 @@ def ingest(
     keywords_ids = list(keywords)
     click.echo(f"Adding keywords to vector store {keywords_ids}...")
     keywords_as_docs = [Document(page_content=k) for k in keywords_ids]
-    vector_store_keywords.add_documents(keywords_as_docs, keywords_ids)
+    _ = vector_store_keywords.add_documents(keywords_as_docs, keywords_ids)
 
     # -- Store documents in vector store
     click.echo("Adding documents to vector store...")
-    vector_store.add_documents(documents, ids)
+    _ = vector_store.add_documents(documents, ids)
 
     # -- Generate graph
     start_time = time.monotonic()
     click.secho("Generating graph...", fg="magenta")
-    graph_documents = []
+    graph_documents: list[GraphDocument] = []
     for idx, doc in enumerate(documents):
-        keyword_nodes = {
-            key: Node(id=key, type="keyword", properties={"name": key})
-            for key in doc.metadata.get("keywords", {})
+        keyword_nodes: dict[str, Node] = {
+            key: Node(id=str(key), type="keyword", properties={"name": key})  # pyright: ignore[reportUnknownArgumentType]
+            for key in doc.metadata.get("keywords", {})  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
         }
         message_node = Node(
             id=ids[idx],
             type="document",
-            properties=doc.metadata | {"content": doc.page_content},
+            properties=doc.metadata | {"content": doc.page_content},  # pyright: ignore[reportUnknownMemberType]
         )
-        for x in doc.metadata.get("keywords", {}):
-            keyword_nodes[x] = Node(id=x, type="keyword", properties={"name": x})
+        for x in doc.metadata.get("keywords", {}):  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
+            keyword_nodes[x] = Node(id=str(x), type="keyword", properties={"name": x})  # pyright: ignore[reportUnknownArgumentType]
         nodes = [message_node] + list(keyword_nodes.values())
         relationships = [
             Relationship(
                 source=message_node, target=keyword_nodes[x], type="described_by"
             )
-            for x in doc.metadata.get("keywords", {})
+            for x in doc.metadata.get("keywords", {})  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
         ]
         graph_documents.append(
             GraphDocument(nodes=nodes, relationships=relationships, source=doc)

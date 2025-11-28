@@ -97,8 +97,8 @@ def infer_keywords(text: str, all_keywords: list[str] | None) -> set[str]:
             ("user", INPUT_PROMPT_INFER_KEYWORDS),
         ]
     )
-    chain = prompt | chat_model
-    res = chain.invoke(
+    chain = prompt | chat_model  # pyright: ignore[reportUnknownVariableType]
+    res = chain.invoke(  # pyright: ignore[reportUnknownMemberType]
         {
             "text": text,
             "additional_instructions": ADDITIONAL_INSTRUCTIONS.format(
@@ -108,10 +108,10 @@ def infer_keywords(text: str, all_keywords: list[str] | None) -> set[str]:
             else "",
         }
     )
-    if isinstance(res.content, str):
+    if isinstance(res.content, str):  # pyright: ignore[reportUnknownMemberType]
         return set([x.strip().lower() for x in res.content.split(",")])
     else:
-        return set([x.strip().lower() for x in str(res.content).split(",")])
+        return set([x.strip().lower() for x in str(res.content).split(",")])  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType]
 
 
 def generate_answer_from_messages(chats: list[str], query: str, user_name: str) -> str:
@@ -121,15 +121,15 @@ def generate_answer_from_messages(chats: list[str], query: str, user_name: str) 
         ("user", "My name is {user_name}. {query}"),
     ]
     prompt = ChatPromptTemplate(messages)
-    chain = prompt | chat_model
-    res = chain.invoke(
+    chain = prompt | chat_model  # pyright: ignore[reportUnknownVariableType]
+    res = chain.invoke(  # pyright: ignore[reportUnknownMemberType]
         {
             "user_name": user_name,
             "query": query,
             "context": [f"\n{txt}\n" for txt in chats],
         }
     )
-    return str(res.content)
+    return str(res.content)  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType]
 
 
 def summarize_answer(context: list[str], query: str, user_name: str) -> str:
@@ -139,12 +139,12 @@ def summarize_answer(context: list[str], query: str, user_name: str) -> str:
         ("user", "My name is {user_name}. {query}"),
     ]
     prompt = ChatPromptTemplate(messages)
-    chain = prompt | chat_model
-    res = chain.invoke(
+    chain = prompt | chat_model  # pyright: ignore[reportUnknownVariableType]
+    res = chain.invoke(  # pyright: ignore[reportUnknownMemberType]
         {
             "user_name": user_name,
             "query": query,
             "context": [f"\n{txt}\n" for txt in context],
         }
     )
-    return str(res.content)
+    return str(res.content)  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType]

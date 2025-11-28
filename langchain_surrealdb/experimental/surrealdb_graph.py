@@ -11,7 +11,7 @@ from surrealdb import (
     RecordID,
     Value,
 )
-from typing_extensions import override
+from typing_extensions import cast, override
 
 SurrealConnection = BlockingWsSurrealConnection | BlockingHttpSurrealConnection
 SurrealAsyncConnection = AsyncWsSurrealConnection | AsyncHttpSurrealConnection
@@ -87,13 +87,23 @@ class SurrealDBGraph(GraphStore):
         raise NotImplementedError
 
     @override
-    def query(self, query: str, params: dict[str, Value] = {}) -> list[dict[str, Any]]:  # pyright: ignore[reportExplicitAny, reportCallInDefaultInitializer]
+    def query(
+        self,
+        query: str,
+        params: dict[str, Value] = {},  # pyright: ignore[reportCallInDefaultInitializer]
+    ) -> list[dict[str, Value]]:
         """Query the graph."""
         res = self._query(query, params)
         if "error" in res:
-            raise Exception(res["error"]["message"])
+            raise Exception(res["error"]["message"])  # pyright: ignore[reportAny]
         else:
-            return res["result"][0]["result"]
+            result = res["result"][0]["result"]  # pyright: ignore[reportAny]
+            if isinstance(result, list):
+                return cast(list[dict[str, Value]], result)
+            else:
+                raise ValueError(
+                    f"Unexpected result type: {type(result)} with value {result}"  # pyright: ignore[reportAny]
+                )
 
     @override
     def refresh_schema(self) -> None:
@@ -138,7 +148,7 @@ class SurrealDBGraph(GraphStore):
                         },
                     },
                 )
-                source = source["result"][0]["result"][0]
+                source = source["result"][0]["result"][0]  # pyright: ignore[reportAny]
 
             for node in doc.nodes:
                 _ = self._query(
