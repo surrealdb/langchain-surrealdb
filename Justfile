@@ -18,3 +18,6 @@ install:
     uv sync --all-groups --all-extras
     cd examples/basic && uv sync
     cd examples/graph && uv sync
+
+example-graphrag *ARGS:
+    uv run --package graphrag-travel-group-chat cli {{ARGS}}

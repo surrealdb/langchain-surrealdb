@@ -675,7 +675,7 @@ wheels = [
 [[package]]
 name = "graphrag-travel-group-chat"
 version = "0.2.0"
-source = { virtual = "examples/graphrag-travel-group-chat" }
+source = { editable = "examples/graphrag-travel-group-chat" }
 dependencies = [
     { name = "click" },
     { name = "langchain-community" },
