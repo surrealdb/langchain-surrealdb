@@ -273,8 +273,8 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "langchain-core", specifier = "~=1.1.0" },
-    { name = "langchain-ollama", specifier = "~=1.0.0" },
+    { name = "langchain-core" },
+    { name = "langchain-ollama" },
     { name = "langchain-surrealdb", editable = "." },
 ]
 
@@ -534,11 +534,11 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "click", specifier = ">=8.2.1,<9.0.0" },
+    { name = "click", specifier = "~=8.3.1" },
     { name = "langchain", specifier = "~=1.1.0" },
     { name = "langchain-community", specifier = "~=0.4.1" },
-    { name = "langchain-core", specifier = "~=1.1.0" },
-    { name = "langchain-ollama", specifier = "~=1.0.0" },
+    { name = "langchain-core" },
+    { name = "langchain-ollama" },
     { name = "langchain-surrealdb", editable = "." },
     { name = "pyyaml", specifier = "~=6.0.3" },
 ]
@@ -674,10 +674,10 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "click", specifier = ">=8.3.1" },
+    { name = "click", specifier = "~=8.3.1" },
     { name = "langchain-community", git = "https://github.com/langchain-ai/langchain-community.git?subdirectory=libs%2Fcommunity" },
-    { name = "langchain-core", specifier = "~=1.1.0" },
-    { name = "langchain-ollama", specifier = "~=1.0.0" },
+    { name = "langchain-core" },
+    { name = "langchain-ollama" },
     { name = "langchain-surrealdb", editable = "." },
     { name = "nanoid", specifier = "~=2.0.0" },
 ]

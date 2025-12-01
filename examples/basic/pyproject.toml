@@ -8,8 +8,8 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.10,<4.0"
 dependencies = [
-    "langchain-core~=1.1.0",
-    "langchain-ollama~=1.0.0",
+    "langchain-core",
+    "langchain-ollama",
     "langchain-surrealdb",
 ]
 
