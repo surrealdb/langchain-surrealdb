@@ -4,7 +4,7 @@ version = "0.1.4"
 description = "An integration package connecting SurrealDB and LangChain"
 readme = "README.md"
 requires-python = ">=3.10,<4.0"
-license = { file = "LICENSE" }
+license = "MIT"
 dependencies = [
     "langchain-core~=1.1.0",
     "surrealdb @ git+https://github.com/surrealdb/surrealdb.py.git",
@@ -13,8 +13,9 @@ dependencies = [
 ]
 
 [project.urls]
-"Source Code" = "https://github.com/surrealdb/langchain-surrealdb"
-"Release Notes" = "https://github.com/surrealdb/langchain-surrealdb/releases"
+homepage = "https://surrealdb.com/docs/integrations/frameworks/langchain"
+documentation = "https://surrealdb.com/docs/integrations/frameworks/langchain"
+source = "https://github.com/surrealdb/langchain-surrealdb"
 
 [project.optional-dependencies]
 experimental = [
