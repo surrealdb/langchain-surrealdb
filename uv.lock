@@ -273,8 +273,8 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "langchain-core", specifier = ">=1.0.0,<2.0.0" },
-    { name = "langchain-ollama", specifier = ">=1.0.0,<2.0.0" },
+    { name = "langchain-core", specifier = "~=1.1.0" },
+    { name = "langchain-ollama", specifier = "~=1.0.0" },
     { name = "langchain-surrealdb", editable = "." },
 ]
 
@@ -548,12 +548,12 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = ">=8.2.1,<9.0.0" },
-    { name = "langchain", specifier = ">=1.0.0,<2.0.0" },
-    { name = "langchain-community", specifier = ">=0.4.0,<1.0.0" },
-    { name = "langchain-core", specifier = ">=1.0.0,<2.0.0" },
-    { name = "langchain-ollama", specifier = ">=1.0.0,<2.0.0" },
+    { name = "langchain", specifier = "~=1.1.0" },
+    { name = "langchain-community", specifier = "~=0.4.1" },
+    { name = "langchain-core", specifier = "~=1.1.0" },
+    { name = "langchain-ollama", specifier = "~=1.0.0" },
     { name = "langchain-surrealdb", editable = "." },
-    { name = "pyyaml", specifier = ">=6.0.2,<7.0.0" },
+    { name = "pyyaml", specifier = "~=6.0.3" },
 ]
 
 [[package]]
