@@ -42,7 +42,8 @@ def ingest(
             loader = WhatsAppChatLoader(path=file_path)
         case ChatProvider.INSTAGRAM:
             loader = InstagramChatLoader(path=file_path)
-    raw_messages = loader.lazy_load()
+    raw_messages = loader.load()
+    logger.info(f"Loaded {len(raw_messages)} messages")
 
     # -- Create chunks based on time gaps
     chunks: list[Chunk] = []
