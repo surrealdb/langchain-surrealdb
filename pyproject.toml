@@ -1,6 +1,6 @@
 [project]
 name = "langchain-surrealdb"
-version = "0.1.4"
+version = "0.2.0"
 description = "An integration package connecting SurrealDB and LangChain"
 readme = "README.md"
 requires-python = ">=3.10,<4.0"
@@ -16,6 +16,7 @@ dependencies = [
 homepage = "https://surrealdb.com/docs/integrations/frameworks/langchain"
 documentation = "https://surrealdb.com/docs/integrations/frameworks/langchain"
 source = "https://github.com/surrealdb/langchain-surrealdb"
+changelog = "https://github.com/surrealdb/langchain-surrealdb/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 experimental = [
