@@ -5,8 +5,8 @@ from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import OllamaEmbeddings
 from langchain_ollama.llms import OllamaLLM
+from langchain_surrealdb import SurrealDBVectorStore
 from langchain_surrealdb.experimental.surrealdb_graph import SurrealDBGraph
-from langchain_surrealdb.vectorstores import SurrealDBVectorStore
 from surrealdb import Surreal, Value
 
 conn = Surreal("ws://localhost:8000/rpc")

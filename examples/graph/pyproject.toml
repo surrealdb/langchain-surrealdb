@@ -12,7 +12,7 @@ dependencies = [
     "pyyaml~=6.0.3",
     "langchain",
     "langchain-community",
-    "click~=8.3.1",
+    "click",
 ]
 
 [project.scripts]
@@ -22,5 +22,5 @@ run = "graph.main:cli"
 langchain-surrealdb = { workspace = true }
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build~=0.9.15"]
+build-backend = "uv_build"

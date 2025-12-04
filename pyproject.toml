@@ -44,6 +44,10 @@ examples = [
 [tool.ruff.lint]
 select = ["E", "F", "I", "T201"]
 
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+
 [tool.coverage.run]
 omit = ["tests/*"]
 

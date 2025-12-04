@@ -6,8 +6,8 @@ from langchain_surrealdb.experimental.graph_qa.chain import SurrealDBGraphQAChai
 from .ingest import ingest as ingest_handler
 from .utils import ask, get_document_names, init_stores, vector_search
 
-ns = "langchain"
-db = "example-graph"
+ns = "langchain-surrealdb"
+db = "graph"
 
 
 @click.group()

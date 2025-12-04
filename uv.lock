@@ -650,7 +650,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "click", specifier = "~=8.3.1" },
+    { name = "click" },
     { name = "langchain" },
     { name = "langchain-community" },
     { name = "langchain-core" },
@@ -674,7 +674,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "click", specifier = "~=8.3.1" },
+    { name = "click" },
     { name = "langchain-community", git = "https://github.com/langchain-ai/langchain-community.git?subdirectory=libs%2Fcommunity" },
     { name = "langchain-core" },
     { name = "langchain-ollama" },
