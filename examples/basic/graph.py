@@ -5,14 +5,13 @@ from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import OllamaEmbeddings
 from langchain_ollama.llms import OllamaLLM
-from surrealdb import Surreal, Value
-
 from langchain_surrealdb.experimental.surrealdb_graph import SurrealDBGraph
 from langchain_surrealdb.vectorstores import SurrealDBVectorStore
+from surrealdb import Surreal, Value
 
 conn = Surreal("ws://localhost:8000/rpc")
 _ = conn.signin({"username": "root", "password": "root"})
-conn.use("langchain", "demo")
+conn.use("langchain-surrealdb", "basic-graph")
 vector_store = SurrealDBVectorStore(OllamaEmbeddings(model="all-minilm:22m"), conn)
 graph_store = SurrealDBGraph(conn)
 

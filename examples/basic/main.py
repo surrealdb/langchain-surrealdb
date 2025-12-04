@@ -1,13 +1,12 @@
 from langchain_core.documents import Document
 from langchain_ollama import OllamaEmbeddings
-from surrealdb import Surreal
-
 from langchain_surrealdb.vectorstores import SurrealDBVectorStore
+from surrealdb import Surreal
 
 conn = Surreal("ws://localhost:8000/rpc")
 _ = conn.signin({"username": "root", "password": "root"})
-conn.use("langchain", "demo")
-vector_store = SurrealDBVectorStore(OllamaEmbeddings(model="llama3.2"), conn)
+conn.use("langchain-surrealdb", "basic-main")
+vector_store = SurrealDBVectorStore(OllamaEmbeddings(model="all-minilm:22m"), conn)
 
 _url = "https://surrealdb.com"
 d1 = Document(page_content="foo", metadata={"source": _url})

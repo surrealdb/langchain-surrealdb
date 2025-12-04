@@ -558,7 +558,9 @@ class SurrealDBVectorStore(VectorStore):
         )
         results = self.connection.query(query, args)
         if not isinstance(results, list):
-            raise ValueError("Invalid query results, expected a list")
+            raise ValueError(
+                f"Invalid query results, expected a list. Result: {results}"
+            )
         return self._parse_results(results)
 
     async def _asimilarity_search_with_score_by_vector(
