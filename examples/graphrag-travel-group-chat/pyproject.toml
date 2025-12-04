@@ -20,7 +20,6 @@ cli = "graphrag_travel_group_chat.main:cli"
 langchain-surrealdb = { workspace = true }
 langchain-community = { git = "https://github.com/langchain-ai/langchain-community.git", subdirectory = "libs/community" }
 
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

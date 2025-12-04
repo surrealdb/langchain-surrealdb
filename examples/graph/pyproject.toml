@@ -1,5 +1,5 @@
 [project]
-name = "example_graph"
+name = "graph"
 version = "0.1.0"
 description = ""
 authors = [{ name = "Martin Schaer", email = "martin.schaer@surrealdb.com" }]
@@ -16,7 +16,11 @@ dependencies = [
 ]
 
 [project.scripts]
-run = "example_graph.main:cli"
+run = "graph.main:cli"
 
 [tool.uv.sources]
 langchain-surrealdb = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
