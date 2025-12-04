@@ -10,8 +10,8 @@ dependencies = [
     "langchain-ollama",
     "langchain-surrealdb",
     "pyyaml~=6.0.3",
-    "langchain~=1.1.0",
-    "langchain-community~=0.4.1",
+    "langchain",
+    "langchain-community",
     "click~=8.3.1",
 ]
 

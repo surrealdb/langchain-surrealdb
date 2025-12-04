@@ -535,8 +535,8 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = "~=8.3.1" },
-    { name = "langchain", specifier = "~=1.1.0" },
-    { name = "langchain-community", specifier = "~=0.4.1" },
+    { name = "langchain" },
+    { name = "langchain-community" },
     { name = "langchain-core" },
     { name = "langchain-ollama" },
     { name = "langchain-surrealdb", editable = "." },
@@ -1189,15 +1189,7 @@ version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "langchain-core" },
-    { name = "numpy", version = "1.26.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13'" },
-    { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13'" },
     { name = "surrealdb" },
-]
-
-[package.optional-dependencies]
-experimental = [
-    { name = "langchain-classic" },
-    { name = "langchain-community" },
 ]
 
 [package.dev-dependencies]
@@ -1230,14 +1222,9 @@ typing = [
 
 [package.metadata]
 requires-dist = [
-    { name = "langchain-classic", marker = "extra == 'experimental'", specifier = "~=1.0.0" },
-    { name = "langchain-community", marker = "extra == 'experimental'", specifier = "~=0.4.1" },
     { name = "langchain-core", specifier = "~=1.1.0" },
-    { name = "numpy", marker = "python_full_version < '3.13'", specifier = "~=1.26.0" },
-    { name = "numpy", marker = "python_full_version >= '3.13'", specifier = "~=2.3.5" },
     { name = "surrealdb", specifier = "~=1.0.7" },
 ]
-provides-extras = ["experimental"]
 
 [package.metadata.requires-dev]
 codespell = [{ name = "codespell", specifier = "~=2.4.1" }]

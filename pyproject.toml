@@ -8,8 +8,6 @@ license = "MIT"
 dependencies = [
     "langchain-core~=1.1.0",
     "surrealdb~=1.0.7",
-    "numpy~=1.26.0; python_version < \"3.13\"",
-    "numpy~=2.3.5; python_version >= \"3.13\"",
 ]
 
 [project.urls]
@@ -17,12 +15,6 @@ homepage = "https://surrealdb.com/docs/integrations/frameworks/langchain"
 documentation = "https://surrealdb.com/docs/integrations/frameworks/langchain"
 source = "https://github.com/surrealdb/langchain-surrealdb"
 changelog = "https://github.com/surrealdb/langchain-surrealdb/blob/main/CHANGELOG.md"
-
-[project.optional-dependencies]
-experimental = [
-    "langchain-classic~=1.0.0",
-    "langchain-community~=0.4.1"
-]
 
 [tool.uv]
 default-groups = ["dev", "test", "codespell", "lint", "typing", "experimental", "examples"]
