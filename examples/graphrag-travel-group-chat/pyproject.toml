@@ -16,10 +16,10 @@ dependencies = [
 [project.scripts]
 cli = "graphrag_travel_group_chat.main:cli"
 
-[tool.uv.sources]
-langchain-surrealdb = { workspace = true }
-langchain-community = { git = "https://github.com/langchain-ai/langchain-community.git", subdirectory = "libs/community" }
-
 [build-system]
 requires = ["uv_build~=0.9.15"]
 build-backend = "uv_build"
+
+[tool.uv.sources]
+langchain-surrealdb = { workspace = true }
+langchain-community = { git = "https://github.com/langchain-ai/langchain-community.git", subdirectory = "libs/community" }

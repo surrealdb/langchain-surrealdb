@@ -1,5 +1,5 @@
 [project]
-name = "langchain-surrealdb"
+name = "langchain_surrealdb"
 version = "0.2.0"
 description = "An integration package connecting SurrealDB and LangChain"
 readme = "README.md"
@@ -22,6 +22,9 @@ default-groups = ["dev", "test", "codespell", "lint", "typing", "experimental", 
 [tool.uv.workspace]
 members = ["examples/*"]
 
+[tool.uv.sources]
+example-graph = { workspace = true }
+
 [dependency-groups]
 dev = ["notebook>=7.4.3,<8.0.0"]
 test = [
@@ -38,7 +41,8 @@ experimental = [
 ]
 examples = [
     "click~=8.3.1",
-    "langchain-ollama~=1.0.0"
+    "langchain-ollama~=1.0.0",
+    "example-graph"
 ]
 
 [tool.ruff.lint]

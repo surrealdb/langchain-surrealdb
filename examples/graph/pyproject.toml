@@ -1,26 +1,26 @@
 [project]
-name = "graph"
+name = "example-graph"
 version = "0.1.0"
 description = ""
 authors = [{ name = "Martin Schaer", email = "martin.schaer@surrealdb.com" }]
 readme = "README.md"
-requires-python = ">=3.10,<4.0"
+requires-python = ">=3.10"
 dependencies = [
+    "click",
+    "langchain",
+    "langchain-community",
     "langchain-core",
     "langchain-ollama",
     "langchain-surrealdb",
     "pyyaml~=6.0.3",
-    "langchain",
-    "langchain-community",
-    "click",
 ]
 
 [project.scripts]
 run = "graph.main:cli"
 
-[tool.uv.sources]
-langchain-surrealdb = { workspace = true }
-
 [build-system]
 requires = ["uv_build~=0.9.15"]
 build-backend = "uv_build"
+
+[tool.uv.sources]
+langchain-surrealdb = { workspace = true }
