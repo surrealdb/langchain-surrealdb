@@ -30,7 +30,9 @@ def init_stores(
     conn = Surreal(url)
     _ = conn.signin({"username": user, "password": password})
     conn.use(ns, db)
-    vector_store_ = SurrealDBVectorStore(OllamaEmbeddings(model="all-minilm:22m"), conn)
+    vector_store_ = SurrealDBVectorStore(
+        OllamaEmbeddings(model="all-minilm:22m"), conn, max_chars=512
+    )
     vector_store_keywords_ = SurrealDBVectorStore(
         OllamaEmbeddings(model="all-minilm:22m"),
         conn,

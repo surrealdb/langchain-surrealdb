@@ -24,7 +24,7 @@ For local, two options:
 2. [Run with Docker](https://surrealdb.com/docs/surrealdb/installation/running/docker).
 
     ```bash
-    docker run --rm --pull always -p 8000:8000 surrealdb/surrealdb:latest start
+    docker run --rm --pull always -p 8000:8000 surrealdb/surrealdb:3.0.4 start
     ```
 
 Then, using [just](https://just.systems/man/en/packages.html) from this directory:
