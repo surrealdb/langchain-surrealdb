@@ -56,10 +56,12 @@ def ingest(
             if last_time is None:
                 last_time = timestamp
             if (timestamp - last_time).total_seconds() > max_gap_in_s:
+                chunk_content = "\n".join(curr_chunk)
+                click.echo(f"- Creating chunk. Length: {len(chunk_content)}")
                 chunks.append(
                     Chunk(
                         senders=chunk_senders,
-                        content="\n".join(curr_chunk),
+                        content=chunk_content,
                         timestamp=timestamp,
                     )
                 )
@@ -77,10 +79,12 @@ def ingest(
             )
             chunk_senders.add(sender)
             last_time = timestamp
+    chunk_content = "\n".join(curr_chunk)
+    click.echo(f"- Creating chunk. Length: {len(chunk_content)}")
     chunks.append(
         Chunk(
             senders=chunk_senders,
-            content="\n".join(curr_chunk),
+            content=chunk_content,
             timestamp=last_time if last_time else datetime.now(),
         )
     )
